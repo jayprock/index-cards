@@ -6,12 +6,12 @@ import { StudyGuideService } from '../core/services/study-guide.service';
 
 @Component({
   selector: 'idx-study',
-  templateUrl: './study.component.html',
-  styleUrls: ['./study.component.css']
+  templateUrl: './study-guide.component.html',
+  styleUrls: ['./study-guide.component.css']
 })
 export class StudyGuideComponent implements OnInit {
 
-  studyGuide: StudyGuide;
+  studyGuide: StudyGuide = {name: '', indexCards: []};
 
   constructor(private route: ActivatedRoute, private studyGuideService: StudyGuideService) { }
 

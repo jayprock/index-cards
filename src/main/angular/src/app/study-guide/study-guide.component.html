@@ -1,4 +1,10 @@
-<p>
-TODO - Create study guide.  Study guide name - {{ this.studyGuide.name }}
-</p>
+<h1>
+{{ this.studyGuide.name }}
+</h1>
+
+<ul>
+    <li *ngFor="let indexCard of studyGuide.indexCards">
+        {{ indexCard.front }} - {{ indexCard.back }}
+    </li>
+</ul>
 
