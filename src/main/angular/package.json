@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --proxy-config proxy.conf.json",
     "build": "ng build",
     "buildProd": "ng build --prod --build-optimizer",
     "produceStats": "ng build --prod --build-optimizer --vendor-chunk=true --stats-json --output-path ./stats",
