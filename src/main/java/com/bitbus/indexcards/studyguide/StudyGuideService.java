@@ -22,7 +22,7 @@ public class StudyGuideService {
             Hibernate.initialize(studyGuide.getIndexCards());
             return studyGuide;
         }
-        return null;
+        throw new StudyGuideNotFoundException(id);
     }
 
 }
