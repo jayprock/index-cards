@@ -15,11 +15,11 @@ import { StudyGuideModule } from './study-guide/study-guide.module';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    CoreModule,
     HomeModule,
     SearchModule,
     CreateModule,
-    StudyGuideModule,
-    CoreModule
+    StudyGuideModule
   ],
   providers: [],
   bootstrap: [AppComponent]
