@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { SharedModule } from '../shared/shared.module';
 import { StudyGuideComponent } from './study-guide.component';
 import { StudyGuideRoutingModule } from './study-guide-routing.module';
 
@@ -7,7 +8,8 @@ import { StudyGuideRoutingModule } from './study-guide-routing.module';
   declarations: [StudyGuideComponent],
   imports: [
     CommonModule,
-    StudyGuideRoutingModule
+    StudyGuideRoutingModule,
+    SharedModule
   ]
 })
 export class StudyGuideModule { }
