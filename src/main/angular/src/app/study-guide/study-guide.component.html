@@ -1,10 +1,19 @@
 <h1>
-{{ this.studyGuide.name }}
+    {{ this.studyGuide.name }}
 </h1>
 
-<ul>
-    <li *ngFor="let indexCard of studyGuide.indexCards">
-        {{ indexCard.front }} - {{ indexCard.back }}
-    </li>
-</ul>
 
+<mat-card class="index-card" (click)="onIndexCardClick()">
+    <div [hidden]="!showFront">
+        <mat-card-header>
+            <mat-card-title>{{ this.studyGuide.indexCards[cardNum]?.front }}</mat-card-title>
+        </mat-card-header>
+    </div>
+    <div [hidden]="showFront">
+        {{ this.studyGuide.indexCards[cardNum]?.back }}
+    </div>
+</mat-card>
+<div class="buttons">
+    <button mat-raised-button color="primary" (click)="onPreviousClick()">Previous</button>
+    <button mat-raised-button color="primary" (click)="onNextClick()">Next</button>
+</div>
