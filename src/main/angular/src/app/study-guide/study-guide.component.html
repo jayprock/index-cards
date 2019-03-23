@@ -4,12 +4,10 @@
 
 
 <mat-card class="index-card" (click)="onIndexCardClick()">
-    <div [hidden]="!showFront">
-        <mat-card-header>
-            <mat-card-title>{{ this.studyGuide.indexCards[cardNum]?.front }}</mat-card-title>
-        </mat-card-header>
+    <div [hidden]="!showFront" >
+        {{ this.studyGuide.indexCards[cardNum]?.front }}
     </div>
-    <div [hidden]="showFront">
+    <div [hidden]="showFront" >
         {{ this.studyGuide.indexCards[cardNum]?.back }}
     </div>
 </mat-card>
