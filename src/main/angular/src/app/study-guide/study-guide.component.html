@@ -3,14 +3,16 @@
 </h1>
 
 
-<mat-card class="index-card" (click)="onIndexCardClick()">
-    <div [hidden]="!showFront" >
-        {{ this.studyGuide.indexCards[cardNum]?.front }}
+<div class="index-card">
+    <mat-card [@flip]="visibleSide" class="inner-card" (click)="onIndexCardClick()">
+        <div class="card-front">
+            {{ this.studyGuide.indexCards[cardNum]?.front }}
+        </div>
+        <div class="card-back">
+            {{ this.studyGuide.indexCards[cardNum]?.back }}
+        </div>
+    </mat-card>
     </div>
-    <div [hidden]="showFront" >
-        {{ this.studyGuide.indexCards[cardNum]?.back }}
-    </div>
-</mat-card>
 <div class="buttons">
     <button mat-raised-button color="primary" (click)="onPreviousClick()">Previous</button>
     <button mat-raised-button color="primary" (click)="onNextClick()">Next</button>
