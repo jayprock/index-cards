@@ -24,6 +24,7 @@ h1 {
     height: calc(100% - 32px);
     width: calc(100% - 32px);
     backface-visibility: hidden;
+    line-height: 418px;
 }
 
 .card-back {
