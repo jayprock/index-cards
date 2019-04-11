@@ -15,7 +15,7 @@ import { StudyGuideService } from '../core/services/study-guide.service';
         transform: 'rotateY(180deg)'
       })),
       transition('front => back', [
-        animate('0.8s 0s ease-out',
+        animate('0.5s 0s ease-out',
           keyframes([
             style({
               transform: 'perspective(2000px) rotateY(0deg)',
@@ -41,7 +41,7 @@ import { StudyGuideService } from '../core/services/study-guide.service';
         )
       ]),
       transition('back => front', [
-        animate('0.8s 0s ease-out',
+        animate('0.5s 0s ease-out',
           keyframes([
             style({
               transform: 'perspective(2000px) rotateY(-180deg)',
