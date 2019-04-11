@@ -4,7 +4,7 @@
 
 
 <div class="index-card">
-    <mat-card [@flip]="visibleSide" class="inner-card" (click)="onIndexCardClick()">
+    <mat-card [@flip]="cardState" [@slide]="cardState" class="inner-card" (click)="onIndexCardClick()">
         <div class="card-front">
             {{ this.studyGuide.indexCards[cardNum]?.front }}
         </div>

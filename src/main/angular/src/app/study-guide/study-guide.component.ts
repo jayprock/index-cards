@@ -66,6 +66,78 @@ import { StudyGuideService } from '../core/services/study-guide.service';
           ])
         )
       ]),
+    ]),
+    trigger('slide', [
+      transition('* => slideRight', [
+        animate('0.3s 0s linear',
+          keyframes([
+            style({
+              transform: 'translateX(100%)',
+              opacity: 1,
+              offset: 0.8
+            }),
+            style({
+              opacity: 0,
+              offset: 1
+            }),
+          ])        
+        )
+      ]),
+      transition('slideRight => front', [
+        animate('0.3s 0s ease-out',
+          keyframes([
+            style({
+              transform: 'translateX(-100%)',
+              opacity: 0,
+              offset: 0
+            }),
+            style({
+              transform: 'translateX(-100%)',
+              opacity: 1,
+              offset: 0.2
+            }),
+            style({
+              transform: 'translateX(0%)',
+              offset: 1
+            }),
+          ])        
+        )
+      ]),
+      transition('* => slideLeft', [
+        animate('0.3s 0s linear',
+          keyframes([
+            style({
+              transform: 'translateX(-100%)',
+              opacity: 1,
+              offset: 0.8
+            }),
+            style({
+              opacity: 0,
+              offset: 1
+            }),
+          ])        
+        )
+      ]),
+      transition('slideLeft => front', [
+        animate('0.3s 0s ease-out',
+          keyframes([
+            style({
+              transform: 'translateX(100%)',
+              opacity: 0,
+              offset: 0
+            }),
+            style({
+              transform: 'translateX(100%)',
+              opacity: 1,
+              offset: 0.2
+            }),
+            style({
+              transform: 'translateX(0%)',
+              offset: 1
+            }),
+          ])        
+        )
+      ])
     ])
   ]
 })
@@ -73,7 +145,7 @@ export class StudyGuideComponent implements OnInit {
 
   studyGuide: StudyGuide = {name: '', indexCards: []};
   cardNum = 0;
-  visibleSide = 'front';
+  cardState = 'front';
 
   constructor(private route: ActivatedRoute, private studyGuideService: StudyGuideService) { }
 
@@ -85,27 +157,34 @@ export class StudyGuideComponent implements OnInit {
   }
 
   onIndexCardClick() {
-    if (this.visibleSide == 'back') {
-      this.visibleSide = 'front';
+    if (this.cardState == 'back') {
+      this.cardState = 'front';
     } else {
-      this.visibleSide = 'back';
+      this.cardState = 'back';
     }
   }
 
   onPreviousClick() {
-    this.cardNum--;
-    if (this.cardNum < 0) {
-      this.cardNum = this.studyGuide.indexCards.length - 1;
-    }
-    this.visibleSide = 'front';
+    this.cardState = 'slideLeft';
+    setTimeout(() => {
+      this.cardNum--;
+      this.cardState = 'front';
+      if (this.cardNum < 0) {
+        this.cardNum = this.studyGuide.indexCards.length - 1;
+      }
+    }, 300);
   }
 
   onNextClick() {
-    this.cardNum++;
-    if (this.cardNum >= this.studyGuide.indexCards.length) {
-      this.cardNum = 0;
-    }
-    this.visibleSide = 'front';
+    this.cardState = 'slideRight';
+    setTimeout(() => {
+      this.cardState = 'front';
+      this.cardNum++;
+      if (this.cardNum >= this.studyGuide.indexCards.length) {
+        this.cardNum = 0;
+      }
+    }, 300);
   }
 
 }
+  
