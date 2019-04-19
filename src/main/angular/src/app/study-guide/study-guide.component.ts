@@ -143,7 +143,7 @@ import { StudyGuideService } from '../core/services/study-guide.service';
 })
 export class StudyGuideComponent implements OnInit {
 
-  studyGuide: StudyGuide = {name: '', indexCards: []};
+  studyGuide: StudyGuide = {name: '', description: '', indexCards: []};
   cardNum = 0;
   cardState = 'front';
 

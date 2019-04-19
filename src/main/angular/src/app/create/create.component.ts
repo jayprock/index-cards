@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { IndexCard } from '../core/models/index-card';
+import { StudyGuide } from '../core/models/study-guide';
 
 @Component({
   selector: 'idx-create',
@@ -9,9 +10,13 @@ import { IndexCard } from '../core/models/index-card';
 })
 export class CreateComponent implements OnInit {
 
-  flashCards: IndexCard[] = [
-    { front: "", back: "" }
-  ];
+  studyGuide: StudyGuide = {
+    name: "",
+    description: "",
+    indexCards: [
+      { front: "", back: ""}
+    ]
+  };
 
   constructor() { }
 
@@ -19,7 +24,6 @@ export class CreateComponent implements OnInit {
   }
 
   addFlashCard() {
-    this.flashCards.push({ front: "", back: "" });
-    console.log("length: " + this.flashCards.length);
+    this.studyGuide.indexCards.push({ front: "", back: "" });
   }
 }
