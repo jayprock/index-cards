@@ -6,4 +6,5 @@
     width: 100%;
     background-color: #eee8aa40;
     font-family: Roboto,"Helvetica Neue",sans-serif;
+    overflow-y: scroll;
 }
