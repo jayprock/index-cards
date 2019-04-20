@@ -2,6 +2,7 @@ package com.bitbus.indexcards.studyguide;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -24,8 +25,9 @@ public class StudyGuide {
     private long studyGuideId;
 
     private String name;
+    private String description;
 
-    @OneToMany(mappedBy = "studyGuide")
+    @OneToMany(mappedBy = "studyGuide", cascade = CascadeType.ALL)
     @JsonManagedReference
     @EqualsAndHashCode.Exclude
     @ToString.Exclude

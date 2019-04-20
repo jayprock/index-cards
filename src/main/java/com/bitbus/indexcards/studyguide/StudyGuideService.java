@@ -25,4 +25,8 @@ public class StudyGuideService {
         throw new StudyGuideNotFoundException(id);
     }
 
+    public StudyGuide create(StudyGuide studyGuide) {
+        return studyGuideRepo.save(studyGuide);
+    }
+
 }

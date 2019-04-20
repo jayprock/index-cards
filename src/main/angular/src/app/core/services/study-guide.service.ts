@@ -16,4 +16,8 @@ export class StudyGuideService {
     return this.http.get<StudyGuide>(`${REST_PATHS.studyGuides}/${id}`);
   }
 
+  createStudyGuide(studyGuide: StudyGuide): Observable<StudyGuide> {
+    return this.http.post<StudyGuide>(`${REST_PATHS.studyGuides}`, studyGuide);
+  }
+
 }

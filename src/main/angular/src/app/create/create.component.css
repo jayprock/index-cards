@@ -43,3 +43,16 @@ h1 {
     width: 100px;
     font-size: 18px;
 }
+
+.close {
+    text-align: right;
+    position: absolute;
+    right: 3%;
+    color: #777;
+    z-index: 99;
+}
+
+.close:hover {
+    cursor: pointer;
+    color: #444;
+}
