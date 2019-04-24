@@ -69,7 +69,7 @@ import { StudyGuideService } from '../core/services/study-guide.service';
     ]),
     trigger('slide', [
       transition('* => slideRight', [
-        animate('0.3s 0s linear',
+        animate('0.2s 0s linear',
           keyframes([
             style({
               transform: 'translateX(100%)',
@@ -84,7 +84,7 @@ import { StudyGuideService } from '../core/services/study-guide.service';
         )
       ]),
       transition('slideRight => front', [
-        animate('0.3s 0s ease-out',
+        animate('0.2s 0s ease-out',
           keyframes([
             style({
               transform: 'translateX(-100%)',
@@ -104,7 +104,7 @@ import { StudyGuideService } from '../core/services/study-guide.service';
         )
       ]),
       transition('* => slideLeft', [
-        animate('0.3s 0s linear',
+        animate('0.2s 0s linear',
           keyframes([
             style({
               transform: 'translateX(-100%)',
@@ -119,7 +119,7 @@ import { StudyGuideService } from '../core/services/study-guide.service';
         )
       ]),
       transition('slideLeft => front', [
-        animate('0.3s 0s ease-out',
+        animate('0.2s 0s ease-out',
           keyframes([
             style({
               transform: 'translateX(100%)',
@@ -165,25 +165,25 @@ export class StudyGuideComponent implements OnInit {
   }
 
   onPreviousClick() {
-    this.cardState = 'slideLeft';
+    this.cardState = 'slideRight';
     setTimeout(() => {
       this.cardNum--;
       this.cardState = 'front';
       if (this.cardNum < 0) {
         this.cardNum = this.studyGuide.indexCards.length - 1;
       }
-    }, 300);
+    }, 200);
   }
 
   onNextClick() {
-    this.cardState = 'slideRight';
+    this.cardState = 'slideLeft';
     setTimeout(() => {
       this.cardState = 'front';
       this.cardNum++;
       if (this.cardNum >= this.studyGuide.indexCards.length) {
         this.cardNum = 0;
       }
-    }, 300);
+    }, 200);
   }
 
 }
