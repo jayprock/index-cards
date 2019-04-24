@@ -20,6 +20,8 @@ export class CreateComponent implements OnInit {
     ]
   };
 
+  submitError = false;
+
   constructor(private studyGuideService: StudyGuideService, private router: Router) { }
 
   ngOnInit() {
@@ -27,8 +29,11 @@ export class CreateComponent implements OnInit {
 
   onSubmit() {
     this.studyGuideService.createStudyGuide(this.studyGuide).subscribe(result => {
+      this.submitError = false;
       this.router.navigateByUrl("/" + result.studyGuideId);
-    })
+    }, error => {
+      this.submitError = true;
+    });
   }
 
   addFlashCard() {

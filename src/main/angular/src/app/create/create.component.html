@@ -25,3 +25,4 @@
 <div class="button-container">
     <button mat-raised-button color="primary" class="big-button" (click)="onSubmit()">Submit</button>    
 </div>
+<p class="error-text" *ngIf="submitError">An error occurred and the request could not be completed.</p>
