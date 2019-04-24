@@ -43,4 +43,9 @@ export class CreateComponent implements OnInit {
     this.studyGuide.indexCards.splice(pos, 1);
   }
 
+  onTab(pos: number) {
+    if (pos == this.studyGuide.indexCards.length - 1) {
+      this.addFlashCard();
+    }
+  }
 }

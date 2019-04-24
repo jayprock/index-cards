@@ -16,7 +16,7 @@
                 <textarea matInput placeholder="Front" [(ngModel)]="flashCard.front" name="front{{i}}"></textarea>
             </mat-form-field>
             <mat-form-field class="example-full-width">
-                <textarea matInput placeholder="Back" [(ngModel)]="flashCard.back" name="back{{i}}"></textarea>
+                <textarea matInput placeholder="Back" [(ngModel)]="flashCard.back" name="back{{i}}" (keydown.Tab)="onTab(i)"></textarea>
             </mat-form-field>
         </div>
         <button mat-fab color="accent" (click)="addFlashCard()" class="add-button">+</button>
