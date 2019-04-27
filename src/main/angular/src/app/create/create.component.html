@@ -1,10 +1,10 @@
 <h1>Create Study Guide</h1>
 
 <mat-card class="card-container">
-    <form class="example-form">
+    <form #createForm="ngForm" class="example-form">
         <h2>Basic Information</h2>
         <mat-form-field class="example-full-width">
-          <input matInput placeholder="Name" [(ngModel)]="studyGuide.name" name="name">
+          <input matInput placeholder="Name" [(ngModel)]="studyGuide.name" name="name" required>
         </mat-form-field>
         <mat-form-field class="example-full-width">
           <textarea matInput placeholder="Description" [(ngModel)]="studyGuide.description" name="description"></textarea>
@@ -13,10 +13,10 @@
         <div *ngFor="let flashCard of studyGuide.indexCards; index as i; first as isFirst" class="flash-card example-full-width" appearance="outline">
             <div *ngIf="isRemovable()" class="close" (click)="removeFlashCard(i)">X</div>
             <mat-form-field class="example-full-width">
-                <textarea matInput placeholder="Front" [(ngModel)]="flashCard.front" name="front{{i}}"></textarea>
+                <textarea matInput placeholder="Front" [(ngModel)]="flashCard.front" name="front{{i}}" required></textarea>
             </mat-form-field>
             <mat-form-field class="example-full-width">
-                <textarea matInput placeholder="Back" [(ngModel)]="flashCard.back" name="back{{i}}"></textarea>
+                <textarea matInput placeholder="Back" [(ngModel)]="flashCard.back" name="back{{i}}" (keydown.Tab)="onTab(i)" required></textarea>
             </mat-form-field>
         </div>
         <button mat-fab color="accent" (click)="addFlashCard()" class="add-button">+</button>
@@ -25,3 +25,4 @@
 <div class="button-container">
     <button mat-raised-button color="primary" class="big-button" (click)="onSubmit()">Submit</button>    
 </div>
+<p class="error-text" *ngIf="error.serverError || (error.message && createForm.form.invalid)">{{ error?.message }} </p>

@@ -2,3 +2,9 @@
 /* @import "~@angular/material/prebuilt-themes/deeppurple-amber.css"; */
 /* @import "~@angular/material/prebuilt-themes/pink-bluegrey.css"; */
 /* @import "~@angular/material/prebuilt-themes/purple-green.css"; */
+
+.error-text {
+    color: red;
+    font-size: 12px;
+    text-align: center;
+}
