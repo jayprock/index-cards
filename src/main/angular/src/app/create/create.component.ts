@@ -1,11 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 
+import { ErrorDetails } from '../core/models/error-details';
 import { IndexCard } from '../core/models/index-card';
+import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { StudyGuide } from '../core/models/study-guide';
 import { StudyGuideService } from '../core/services/study-guide.service';
-import { NgForm } from '@angular/forms';
-import { ErrorDetails } from '../core/models/error-details';
 
 @Component({
   selector: 'idx-create',
@@ -32,6 +32,7 @@ export class CreateComponent implements OnInit {
   }
 
   onSubmit() {
+    this.triggerValidation();
     if (this.createForm.form.valid) {
       this.studyGuideService.createStudyGuide(this.studyGuide).subscribe(result => {
         this.error = {};
@@ -63,4 +64,11 @@ export class CreateComponent implements OnInit {
       this.addFlashCard();
     }
   }
+
+  private triggerValidation() {
+    for (var fieldName in this.createForm.controls) {
+      this.createForm.controls[fieldName].markAsTouched();
+    }
+  }
+
 }
