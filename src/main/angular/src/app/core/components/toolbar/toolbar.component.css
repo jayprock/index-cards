@@ -1,0 +1,24 @@
+.menu-bar {
+    font-weight: 300;
+    font-size: 16px;
+}
+
+.menu-bar span {
+    padding: 0 20px;
+}
+
+.logo {
+    font-size: 24px;
+    font-style: italic;
+    font-weight: bold;
+}
+
+.spacer {
+    flex: 1 1 auto;
+}
+
+.menu-button {
+    border-color: #fff;
+    font-weight: 300;
+    font-size: 16px;
+}
