@@ -1,10 +1,31 @@
 .menu-bar {
     font-weight: 300;
-    font-size: 16px;
+    font-size: 17px;
 }
 
 .menu-bar span {
-    padding: 0 20px;
+    padding: 12px 20px;
+}
+
+.menu-bar span:hover {
+    cursor: pointer;
+}
+
+.menu-bar span:hover {
+    cursor: pointer;
+}
+
+.menu-bar span:not(:first-child):hover, .menu-bar span.active {
+    color: #eee;
+}
+
+.menu-bar span:focus {
+    outline: none;
+}
+
+.menu-bar span.destination:hover, .menu-bar span.active {
+    border-bottom: 2px solid #fff;
+    padding-bottom: 10px;
 }
 
 .logo {
@@ -18,7 +39,14 @@
 }
 
 .menu-button {
-    border-color: #fff;
     font-weight: 300;
-    font-size: 16px;
+    font-size: 17px;
+}
+
+.menu-button.bordered {
+    border-color: #fff;
+}
+
+.menu-button:last-child {
+    border: none;
 }
