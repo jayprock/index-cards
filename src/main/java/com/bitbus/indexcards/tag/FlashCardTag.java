@@ -9,7 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
 import com.bitbus.indexcards.card.IndexCard;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -26,7 +25,6 @@ public class FlashCardTag {
     private String name;
 
     @ManyToMany(mappedBy = "tags")
-    @JsonBackReference
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private List<IndexCard> flashCards;

@@ -143,7 +143,7 @@ import { StudyGuideService } from '../core/services/study-guide.service';
 })
 export class StudyGuideComponent implements OnInit {
 
-  studyGuide: StudyGuide = {name: '', description: '', indexCards: []};
+  studyGuide: StudyGuide = {studyGuideName: '', description: '', flashCards: []};
   cardNum = 0;
   cardState = 'front';
 
@@ -170,7 +170,7 @@ export class StudyGuideComponent implements OnInit {
       this.cardNum--;
       this.cardState = 'front';
       if (this.cardNum < 0) {
-        this.cardNum = this.studyGuide.indexCards.length - 1;
+        this.cardNum = this.studyGuide.flashCards.length - 1;
       }
     }, 200);
   }
@@ -180,7 +180,7 @@ export class StudyGuideComponent implements OnInit {
     setTimeout(() => {
       this.cardState = 'front';
       this.cardNum++;
-      if (this.cardNum >= this.studyGuide.indexCards.length) {
+      if (this.cardNum >= this.studyGuide.flashCards.length) {
         this.cardNum = 0;
       }
     }, 200);

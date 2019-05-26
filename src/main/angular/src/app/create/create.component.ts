@@ -17,9 +17,9 @@ export class CreateComponent implements OnInit {
   @ViewChild('createForm') createForm: NgForm;
 
   studyGuide: StudyGuide = {
-    name: "",
+    studyGuideName: "",
     description: "",
-    indexCards: [
+    flashCards: [
       { front: "", back: ""}
     ]
   };
@@ -48,19 +48,19 @@ export class CreateComponent implements OnInit {
   }
 
   addFlashCard() {
-    this.studyGuide.indexCards.push({ front: "", back: "" });
+    this.studyGuide.flashCards.push({ front: "", back: "" });
   }
 
   isRemovable() {
-    return this.studyGuide.indexCards.length > 1;
+    return this.studyGuide.flashCards.length > 1;
   }
 
   removeFlashCard(pos: number) {
-    this.studyGuide.indexCards.splice(pos, 1);
+    this.studyGuide.flashCards.splice(pos, 1);
   }
 
   onTab(pos: number) {
-    if (pos == this.studyGuide.indexCards.length - 1) {
+    if (pos == this.studyGuide.flashCards.length - 1) {
       this.addFlashCard();
     }
   }

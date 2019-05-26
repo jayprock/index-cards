@@ -4,13 +4,13 @@
     <form #createForm="ngForm" class="example-form">
         <h2>Basic Information</h2>
         <mat-form-field class="example-full-width">
-          <input matInput placeholder="Name" [(ngModel)]="studyGuide.name" name="name" required>
+          <input matInput placeholder="Name" [(ngModel)]="studyGuide.studyGuideName" name="name" required>
         </mat-form-field>
         <mat-form-field class="example-full-width">
           <textarea matInput placeholder="Description" [(ngModel)]="studyGuide.description" name="description"></textarea>
         </mat-form-field>
         <h2>Flash Cards</h2>
-        <div *ngFor="let flashCard of studyGuide.indexCards; index as i; first as isFirst" class="flash-card example-full-width" appearance="outline">
+        <div *ngFor="let flashCard of studyGuide.flashCards; index as i; first as isFirst" class="flash-card example-full-width" appearance="outline">
             <div *ngIf="isRemovable()" class="close" (click)="removeFlashCard(i)">X</div>
             <mat-form-field class="example-full-width">
                 <textarea matInput placeholder="Front" [(ngModel)]="flashCard.front" name="front{{i}}" required></textarea>

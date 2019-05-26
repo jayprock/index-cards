@@ -3,6 +3,7 @@ package com.bitbus.indexcards.studyguide;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,7 +17,6 @@ import javax.validation.constraints.Size;
 
 import com.bitbus.indexcards.card.IndexCard;
 import com.bitbus.indexcards.tag.StudyGuideTag;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -28,26 +28,26 @@ public class StudyGuide {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long studyGuideId;
+    @Column(name = "study_guide_id", nullable = false)
+    private long id;
 
     @NotEmpty
+    @Column(nullable = false)
     private String name;
+
     private String description;
 
     @OneToMany(mappedBy = "studyGuide", cascade = CascadeType.ALL)
-    @JsonManagedReference
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @Size(min = 1)
     private List<IndexCard> indexCards;
 
     @ManyToMany
-    @JoinTable(name = "tag_study_guide", joinColumns = @JoinColumn(name = "studyGuideId"),
+    @JoinTable(name = "map_study_guide_tag", joinColumns = @JoinColumn(name = "id"),
             inverseJoinColumns = @JoinColumn(name = "studyGuideTagId"))
-    @JsonManagedReference
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @Size(min = 1)
     private List<StudyGuideTag> tags;
 
 }

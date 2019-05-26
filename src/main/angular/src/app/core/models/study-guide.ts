@@ -2,7 +2,7 @@ import { IndexCard } from './index-card';
 
 export interface StudyGuide {
     studyGuideId?: number;
-    name: string;
+    studyGuideName: string;
     description: string;
-    indexCards: IndexCard[];
+    flashCards: IndexCard[];
 }

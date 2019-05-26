@@ -1,15 +1,15 @@
 <h1>
-    {{ this.studyGuide.name }}
+    {{ this.studyGuide.studyGuideName }}
 </h1>
 
 
 <div class="index-card">
     <mat-card [@flip]="cardState" [@slide]="cardState" class="inner-card" (click)="onIndexCardClick()">
         <div class="card-front">
-            {{ this.studyGuide.indexCards[cardNum]?.front }}
+            {{ this.studyGuide.flashCards[cardNum]?.front }}
         </div>
         <div class="card-back">
-            {{ this.studyGuide.indexCards[cardNum]?.back }}
+            {{ this.studyGuide.flashCards[cardNum]?.back }}
         </div>
     </mat-card>
     </div>
