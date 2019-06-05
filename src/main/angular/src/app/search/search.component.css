@@ -1,0 +1,17 @@
+.example-form {
+    min-width: 150px;
+}
+
+.flex-container {
+    display: flex;
+}
+
+.flex-container .flex-grow {
+    flex-grow: 1;
+    margin-right: 5px;
+}
+
+.flex-container button {
+    width: 75px;
+    height: 45px;
+}

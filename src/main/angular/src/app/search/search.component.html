@@ -1,3 +1,11 @@
-<p>
-TODO - provide the Search component
-</p>
+<mat-card class="card-container">
+    <h1 class="center-text">Find a Study Guide</h1>
+    <form #createForm="ngForm" class="example-form">
+        <div class="flex-container">
+            <mat-form-field class="flex-grow">
+                <input matInput placeholder="Name or Category" name="search">
+            </mat-form-field>
+            <button mat-raised-button color="primary" (click)="onSearch()">Search</button> 
+        </div>
+    </form>
+</mat-card>
