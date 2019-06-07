@@ -1,5 +1,9 @@
 insert into STUDY_GUIDE values(1, 'US Capitals', 'Capitals of the 50 states');
 
+insert into STUDY_GUIDE_TAG values(1, 'Geography');
+
+insert into MAP_STUDY_GUIDE_TAG values (1, 1);
+
 insert into INDEX_CARD (index_card_id, front, back, study_guide_id) values (1, 'Alabama', 'Montgomery', 1);
 insert into INDEX_CARD (index_card_id, front, back, study_guide_id) values (2, 'Alaska', 'Juneau', 1);
 insert into INDEX_CARD (index_card_id, front, back, study_guide_id) values (3, 'Arizona', 'Phoenix', 1);

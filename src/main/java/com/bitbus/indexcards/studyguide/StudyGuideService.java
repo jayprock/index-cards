@@ -1,5 +1,6 @@
 package com.bitbus.indexcards.studyguide;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -21,6 +22,10 @@ public class StudyGuideService {
 
     public StudyGuide create(StudyGuide studyGuide) {
         return studyGuideRepo.save(studyGuide);
+    }
+
+    public List<StudyGuide> search(String searchParam) {
+        return studyGuideRepo.search(searchParam);
     }
 
 }

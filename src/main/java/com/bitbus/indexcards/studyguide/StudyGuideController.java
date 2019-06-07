@@ -46,7 +46,7 @@ public class StudyGuideController {
         }
         log.info("Found {} flash cards", flashCards.size());
 
-        return new StudyGuideDto(studyGuide, flashCards);
+        return StudyGuideDto.get(studyGuide, flashCards);
     }
 
     @PostMapping
@@ -55,7 +55,15 @@ public class StudyGuideController {
         StudyGuide studyGuide = studyGuideService.create(studyGuideDto.toStudyGuide());
         log.info("Created study guide {}:{} with {} flash cards", studyGuide.getId(), studyGuide.getName(),
                 studyGuide.getIndexCards().size());
-        return new StudyGuideDto(studyGuide, studyGuide.getIndexCards());
+        return StudyGuideDto.get(studyGuide, studyGuide.getIndexCards());
+    }
+
+    @GetMapping
+    public List<StudyGuideDto> searchStudyGuides(@RequestParam(name = "search", required = true) String searchParam) {
+        log.info("Performing a search against \"{}\"", searchParam);
+        List<StudyGuide> studyGuides = studyGuideService.search(searchParam);
+        log.info("Found {} study guides", studyGuides.size());
+        return StudyGuideDto.get(studyGuides);
     }
 
 

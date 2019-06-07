@@ -7,10 +7,8 @@ import com.bitbus.indexcards.card.FlashCardDto;
 import com.bitbus.indexcards.card.IndexCard;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 public class StudyGuideDto {
 
     private long studyGuideId;
@@ -18,11 +16,22 @@ public class StudyGuideDto {
     private String description;
     private List<FlashCardDto> flashCards;
 
-    public StudyGuideDto(StudyGuide studyGuide, List<IndexCard> flashCards) {
-        studyGuideId = studyGuide.getId();
-        studyGuideName = studyGuide.getName();
-        this.flashCards = flashCards.stream() //
-                .map(card -> new FlashCardDto(card)) //
+    public static StudyGuideDto get(StudyGuide studyGuide, List<IndexCard> flashCards) {
+        StudyGuideDto dto = new StudyGuideDto();
+        dto.setStudyGuideId(studyGuide.getId());
+        dto.setStudyGuideName(studyGuide.getName());
+        dto.setDescription(studyGuide.getDescription());
+        if (flashCards != null) {
+            dto.setFlashCards(flashCards.stream() //
+                    .map(card -> FlashCardDto.get(card)) //
+                    .collect(Collectors.toList()));
+        }
+        return dto;
+    }
+
+    public static List<StudyGuideDto> get(List<StudyGuide> studyGuides) {
+        return studyGuides.stream() //
+                .map(guide -> get(guide, null)) //
                 .collect(Collectors.toList());
     }
 

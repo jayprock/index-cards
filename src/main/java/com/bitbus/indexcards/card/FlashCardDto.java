@@ -3,18 +3,18 @@ package com.bitbus.indexcards.card;
 import com.bitbus.indexcards.studyguide.StudyGuide;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 public class FlashCardDto {
 
     private String front;
     private String back;
 
-    public FlashCardDto(IndexCard indexCard) {
-        front = indexCard.getFront();
-        back = indexCard.getBack();
+    public static FlashCardDto get(IndexCard indexCard) {
+        FlashCardDto dto = new FlashCardDto();
+        dto.setFront(indexCard.getFront());
+        dto.setBack(indexCard.getBack());
+        return dto;
     }
 
     public IndexCard toFlashCard(StudyGuide studyGuide) {
