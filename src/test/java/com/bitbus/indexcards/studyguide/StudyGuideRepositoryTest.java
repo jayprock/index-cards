@@ -20,7 +20,13 @@ public class StudyGuideRepositoryTest {
 
     @Test
     public void testSearch() {
-        List<StudyGuide> studyGuides = studyGuideRepo.search("mAtH");
-        Assert.assertEquals(2, studyGuides.size());
+        {
+            List<StudyGuide> studyGuides = studyGuideRepo.search("mAtH");
+            Assert.assertEquals(2, studyGuides.size());
+        }
+        {
+            List<StudyGuide> studyGuides = studyGuideRepo.search("Zach");
+            Assert.assertEquals(1, studyGuides.size());
+        }
     }
 }

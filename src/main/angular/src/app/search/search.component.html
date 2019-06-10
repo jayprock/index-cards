@@ -1,11 +1,21 @@
 <mat-card class="card-container">
-    <h1 class="center-text">Find a Study Guide</h1>
-    <form #createForm="ngForm" class="example-form">
+    <h1 class="center-text">Find Study Guide</h1>
+    <form #searchForm="ngForm" class="example-form">
         <div class="flex-container">
             <mat-form-field class="flex-grow">
-                <input matInput placeholder="Name or Category" name="search">
+                <input matInput placeholder="Name or Category" name="search" [(ngModel)]="searchParam" required>
             </mat-form-field>
             <button mat-raised-button color="primary" (click)="onSearch()">Search</button> 
+        </div>
+        <div *ngIf="searchExecuted">
+            <h2>Results for "{{ lastExecutedSearchParam }}"</h2>
+            <div *ngIf="studyGuides?.length > 0; else noResults">
+                <div *ngFor="let studyGuide of studyGuides">
+                    <a routerLink="/{{ studyGuide.studyGuideId }}" class="result-link">{{ studyGuide.studyGuideName }}</a>
+                    <p class="result-description">{{ studyGuide.description }}</p> 
+                </div>
+            </div>
+            <ng-template #noResults>No results found.</ng-template>
         </div>
     </form>
 </mat-card>
