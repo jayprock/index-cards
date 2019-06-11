@@ -1,21 +1,21 @@
 
 <mat-card class="card-container">
     <h1 class="center-text">Create Study Guide</h1>
-    <form #createForm="ngForm" class="example-form">
+    <form #createForm="ngForm" class="form-primary">
         <h2>Basic Information</h2>
-        <mat-form-field class="example-full-width">
+        <mat-form-field class="full-width">
           <input matInput placeholder="Name" [(ngModel)]="studyGuide.studyGuideName" name="name" required>
         </mat-form-field>
-        <mat-form-field class="example-full-width">
+        <mat-form-field class="full-width">
           <textarea matInput placeholder="Description" [(ngModel)]="studyGuide.description" name="description"></textarea>
         </mat-form-field>
         <h2>Flash Cards</h2>
-        <div *ngFor="let flashCard of studyGuide.flashCards; index as i; first as isFirst" class="flash-card example-full-width" appearance="outline">
+        <div *ngFor="let flashCard of studyGuide.flashCards; index as i; first as isFirst" class="flash-card full-width" appearance="outline">
             <div *ngIf="isRemovable()" class="close" (click)="removeFlashCard(i)">X</div>
-            <mat-form-field class="example-full-width">
+            <mat-form-field class="full-width">
                 <textarea matInput placeholder="Front" [(ngModel)]="flashCard.front" name="front{{i}}" required></textarea>
             </mat-form-field>
-            <mat-form-field class="example-full-width">
+            <mat-form-field class="full-width">
                 <textarea matInput placeholder="Back" [(ngModel)]="flashCard.back" name="back{{i}}" (keydown.Tab)="onTab(i)" required></textarea>
             </mat-form-field>
         </div>
