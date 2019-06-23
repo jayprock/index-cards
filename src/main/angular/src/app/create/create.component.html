@@ -7,6 +7,20 @@
           <input matInput placeholder="Name" [(ngModel)]="studyGuide.studyGuideName" name="name" required>
         </mat-form-field>
         <mat-form-field class="full-width">
+            <mat-chip-list #categories>
+                <mat-chip *ngFor="let category of studyGuide.categories; index as i;" [removable]="true" [selectable]="false" (removed)="removeCategory(i)"  >
+                    {{ category }}
+                    <mat-icon matChipRemove *ngIf="true">cancel</mat-icon>
+                </mat-chip>
+                <input placeholder="Categories" 
+                    [matChipInputFor]="categories"
+                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                    (matChipInputTokenEnd)="addCategory($event)"
+                    [matChipInputAddOnBlur]="true"
+                    required>
+            </mat-chip-list>
+        </mat-form-field>
+        <mat-form-field class="full-width">
           <textarea matInput placeholder="Description" [(ngModel)]="studyGuide.description" name="description"></textarea>
         </mat-form-field>
         <h2>Flash Cards</h2>

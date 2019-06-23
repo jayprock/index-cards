@@ -1,7 +1,9 @@
+import { COMMA, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
 import { Component, OnInit, ViewChild } from '@angular/core';
 
 import { ErrorDetails } from '../core/models/error-details';
 import { IndexCard } from '../core/models/index-card';
+import { MatChipInputEvent } from '@angular/material/chips';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { StudyGuide } from '../core/models/study-guide';
@@ -19,12 +21,15 @@ export class CreateComponent implements OnInit {
   studyGuide: StudyGuide = {
     studyGuideName: "",
     description: "",
+    categories: [],
     flashCards: [
       { front: "", back: ""}
     ]
   };
 
   error: ErrorDetails = { serverError: false, message: null};
+
+  readonly separatorKeysCodes: number[] = [ SPACE, COMMA, SEMICOLON ];
 
   constructor(private studyGuideService: StudyGuideService, private router: Router) { }
 
@@ -44,6 +49,20 @@ export class CreateComponent implements OnInit {
     } else {
       this.error.serverError = false;
       this.error.message = "Please enter all required fields and try again."
+    }
+  }
+
+  addCategory(event: MatChipInputEvent) {
+    const category = event.value;
+    if (category && category.length > 0) {
+      this.studyGuide.categories.push(category);
+    }
+    event.input.value = '';
+  }
+
+  removeCategory(pos: number) {
+    if (this.studyGuide.categories[pos]) {
+      this.studyGuide.categories.splice(pos, 1);
     }
   }
 
