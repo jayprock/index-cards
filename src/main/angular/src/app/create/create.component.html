@@ -15,10 +15,16 @@
                 <input placeholder="Categories" 
                     [matChipInputFor]="categories"
                     [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                    (matChipInputTokenEnd)="addCategory($event)"
+                    (matChipInputTokenEnd)="onCategoryInputTokenEnd($event)"
                     [matChipInputAddOnBlur]="true"
+                    [matAutocomplete]="auto"
                     required>
             </mat-chip-list>
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onCategorySelected($event)">
+                <mat-option *ngFor="let option of categoryOptions" [value]="option">
+                    {{ option }}
+                </mat-option>
+            </mat-autocomplete>
         </mat-form-field>
         <mat-form-field class="full-width">
           <textarea matInput placeholder="Description" [(ngModel)]="studyGuide.description" name="description"></textarea>

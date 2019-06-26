@@ -3,6 +3,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 
 import { ErrorDetails } from '../core/models/error-details';
 import { IndexCard } from '../core/models/index-card';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -31,6 +32,8 @@ export class CreateComponent implements OnInit {
 
   readonly separatorKeysCodes: number[] = [ SPACE, COMMA, SEMICOLON ];
 
+  categoryOptions: string[] = ["Math", "Science", "History"];
+
   constructor(private studyGuideService: StudyGuideService, private router: Router) { }
 
   ngOnInit() {
@@ -52,12 +55,19 @@ export class CreateComponent implements OnInit {
     }
   }
 
-  addCategory(event: MatChipInputEvent) {
-    const category = event.value;
+  onCategoryInputTokenEnd(event: MatChipInputEvent) {
+    this.addCategory(event.value);
+    event.input.value = '';
+  }
+
+  onCategorySelected(event: MatAutocompleteSelectedEvent) {
+    this.addCategory(event.option.value);
+  }
+
+  private addCategory(category: string) {
     if (category && category.length > 0) {
       this.studyGuide.categories.push(category);
     }
-    event.input.value = '';
   }
 
   removeCategory(pos: number) {
