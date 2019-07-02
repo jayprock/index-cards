@@ -1,10 +1,10 @@
 import { COMMA, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormArray, FormBuilder, NgForm, Validators } from '@angular/forms';
 
 import { ErrorDetails } from '../core/models/error-details';
 import { IndexCard } from '../core/models/index-card';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { StudyGuide } from '../core/models/study-guide';
 import { StudyGuideService } from '../core/services/study-guide.service';
@@ -15,8 +15,6 @@ import { StudyGuideService } from '../core/services/study-guide.service';
   styleUrls: ['./create.component.css']
 })
 export class CreateComponent implements OnInit {
-
-  @ViewChild('createForm') createForm: NgForm;
 
   studyGuide: StudyGuide = {
     studyGuideName: "",
@@ -31,14 +29,25 @@ export class CreateComponent implements OnInit {
 
   readonly separatorKeysCodes: number[] = [ SPACE, COMMA, SEMICOLON ];
 
-  constructor(private studyGuideService: StudyGuideService, private router: Router) { }
+  studyGuideForm = this.fb.group({
+    studyGuideName: ['', Validators.required],
+    description: [''],
+    flashCards: this.fb.array([
+      this.fb.group({
+        front: [],
+        back: []
+      })
+    ])
+  });
+
+  constructor(private studyGuideService: StudyGuideService, private router: Router, private fb: FormBuilder) { }
 
   ngOnInit() {
   }
 
   onSubmit() {
     this.triggerValidation();
-    if (this.createForm.form.valid) {
+    if (this.studyGuideForm.valid) {
       this.studyGuideService.createStudyGuide(this.studyGuide).subscribe(result => {
         this.error = {};
         this.router.navigateByUrl("/" + result.studyGuideId);
@@ -52,22 +61,12 @@ export class CreateComponent implements OnInit {
     }
   }
 
-  addCategory(event: MatChipInputEvent) {
-    const category = event.value;
-    if (category && category.length > 0) {
-      this.studyGuide.categories.push(category);
-    }
-    event.input.value = '';
-  }
-
-  removeCategory(pos: number) {
-    if (this.studyGuide.categories[pos]) {
-      this.studyGuide.categories.splice(pos, 1);
-    }
+  get flashCards() {
+    return this.studyGuideForm.get('flashCards') as FormArray;
   }
 
   addFlashCard() {
-    this.studyGuide.flashCards.push({ front: "", back: "" });
+    this.flashCards.push(this.fb.group({ front: '', back: ''}));
   }
 
   isRemovable() {
@@ -85,9 +84,9 @@ export class CreateComponent implements OnInit {
   }
 
   private triggerValidation() {
-    for (var fieldName in this.createForm.controls) {
-      this.createForm.controls[fieldName].markAsTouched();
-    }
+    // for (var fieldName in this.createForm.controls) {
+    //   this.createForm.controls[fieldName].markAsTouched();
+    // }
   }
 
 }

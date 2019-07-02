@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { CreateComponent } from './create.component';
 import { CreateRoutingModule } from './create-routing.module';
-import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
@@ -11,7 +11,7 @@ import { SharedModule } from '../shared/shared.module';
     CommonModule,
     CreateRoutingModule,
     SharedModule,
-    FormsModule
+    ReactiveFormsModule
   ]
 })
 export class CreateModule { }
