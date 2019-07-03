@@ -1,10 +1,8 @@
-import { COMMA, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, NgForm, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
+import { Component } from '@angular/core';
 import { ErrorDetails } from '../core/models/error-details';
 import { IndexCard } from '../core/models/index-card';
-import { MatChipInputEvent } from '@angular/material/chips';
 import { Router } from '@angular/router';
 import { StudyGuide } from '../core/models/study-guide';
 import { StudyGuideService } from '../core/services/study-guide.service';
@@ -14,41 +12,30 @@ import { StudyGuideService } from '../core/services/study-guide.service';
   templateUrl: './create.component.html',
   styleUrls: ['./create.component.css']
 })
-export class CreateComponent implements OnInit {
-
-  studyGuide: StudyGuide = {
-    studyGuideName: "",
-    description: "",
-    categories: [],
-    flashCards: [
-      { front: "", back: ""}
-    ]
-  };
-
-  error: ErrorDetails = { serverError: false, message: null};
-
-  readonly separatorKeysCodes: number[] = [ SPACE, COMMA, SEMICOLON ];
-
+export class CreateComponent {
+  
   studyGuideForm = this.fb.group({
     studyGuideName: ['', Validators.required],
     description: [''],
     flashCards: this.fb.array([
       this.fb.group({
-        front: [],
-        back: []
+        front: ['', Validators.required],
+        back: ['', Validators.required]
       })
     ])
   });
 
-  constructor(private studyGuideService: StudyGuideService, private router: Router, private fb: FormBuilder) { }
+  error: ErrorDetails = { serverError: false, message: null};
 
-  ngOnInit() {
-  }
+  constructor(
+    private studyGuideService: StudyGuideService, 
+    private router: Router, 
+    private fb: FormBuilder
+    ) { }
 
   onSubmit() {
-    this.triggerValidation();
     if (this.studyGuideForm.valid) {
-      this.studyGuideService.createStudyGuide(this.studyGuide).subscribe(result => {
+      this.studyGuideService.createStudyGuide(this.constructStudyGuide()).subscribe(result => {
         this.error = {};
         this.router.navigateByUrl("/" + result.studyGuideId);
       }, error => {
@@ -65,28 +52,42 @@ export class CreateComponent implements OnInit {
     return this.studyGuideForm.get('flashCards') as FormArray;
   }
 
+  
   addFlashCard() {
     this.flashCards.push(this.fb.group({ front: '', back: ''}));
   }
+  
+  private constructFlashCards(): IndexCard[] {
+    let flashCards: IndexCard[] = [];
+    this.flashCards.controls.forEach(control => {
+      let fg = control as FormGroup;
+      flashCards.push({ front: fg.get('front').value, back: fg.get('back').value });
+    });
+    return flashCards;
+  }
+  
+  private constructStudyGuide(): StudyGuide {
+    let studyGuide: StudyGuide = {
+      studyGuideName: this.studyGuideForm.get('studyGuideName').value,
+      description: this.studyGuideForm.get('description').value,
+      categories: [],
+      flashCards: this.constructFlashCards()
+    };
+    return studyGuide;
+  }
 
   isRemovable() {
-    return this.studyGuide.flashCards.length > 1;
+    return this.flashCards.length > 1;
   }
 
   removeFlashCard(pos: number) {
-    this.studyGuide.flashCards.splice(pos, 1);
+    this.flashCards.controls.splice(pos, 1);
   }
 
   onTab(pos: number) {
-    if (pos == this.studyGuide.flashCards.length - 1) {
+    if (pos == this.flashCards.length - 1) {
       this.addFlashCard();
     }
-  }
-
-  private triggerValidation() {
-    // for (var fieldName in this.createForm.controls) {
-    //   this.createForm.controls[fieldName].markAsTouched();
-    // }
   }
 
 }
