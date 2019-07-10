@@ -58,6 +58,11 @@ export class CreateComponent implements OnInit {
   
   addFlashCard() {
     this.flashCards.push(this.fb.group({ front: '', back: ''}));
+    let newFormGroup = this.flashCards.at(this.flashCards.length - 1) as FormGroup;
+    console.log(newFormGroup);
+    newFormGroup.markAsPristine();
+    newFormGroup.markAsUntouched();
+    console.log(newFormGroup);
   }
   
   private constructFlashCards(): IndexCard[] {

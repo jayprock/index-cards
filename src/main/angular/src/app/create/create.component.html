@@ -21,11 +21,11 @@
                     </mat-form-field>
                 </div>
             </div>
-            <button mat-fab color="accent" (click)="addFlashCard()" class="add-button">+</button>
+            <button type="button" mat-fab color="accent" (click)="addFlashCard()" class="add-button">+</button>
+        </div>
+        <p class="error-text" *ngIf="error.serverError || (error.message && !studyGuideForm.valid)">{{ error?.message }} </p>
+        <div class="button-container">
+            <button mat-raised-button color="primary" class="big-button" (click)="onSubmit()">Submit</button>    
         </div>
     </form>
 </mat-card>
-<div class="button-container">
-    <button mat-raised-button color="primary" class="big-button" (click)="onSubmit()">Submit</button>    
-</div>
-<p class="error-text" *ngIf="error.serverError || (error.message && !studyGuideForm.valid)">{{ error?.message }} </p>
