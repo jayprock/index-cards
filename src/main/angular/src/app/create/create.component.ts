@@ -1,6 +1,6 @@
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
 
-import { Component } from '@angular/core';
 import { ErrorDetails } from '../core/models/error-details';
 import { IndexCard } from '../core/models/index-card';
 import { Router } from '@angular/router';
@@ -12,26 +12,29 @@ import { StudyGuideService } from '../core/services/study-guide.service';
   templateUrl: './create.component.html',
   styleUrls: ['./create.component.css']
 })
-export class CreateComponent {
+export class CreateComponent implements OnInit {
   
-  studyGuideForm = this.fb.group({
-    studyGuideName: ['', Validators.required],
-    description: [''],
-    flashCards: this.fb.array([
-      this.fb.group({
-        front: ['', Validators.required],
-        back: ['', Validators.required]
-      })
-    ])
-  });
-
+  studyGuideForm: FormGroup;
   error: ErrorDetails = { serverError: false, message: null};
-
+  
   constructor(
     private studyGuideService: StudyGuideService, 
     private router: Router, 
     private fb: FormBuilder
     ) { }
+    
+    ngOnInit() {
+      this.studyGuideForm = this.fb.group({
+        studyGuideName: ['', Validators.required],
+        description: [''],
+        flashCards: this.fb.array([
+          this.fb.group({
+            front: ['', Validators.required],
+            back: ['', Validators.required]
+          })
+        ])
+      });
+  }
 
   onSubmit() {
     if (this.studyGuideForm.valid) {
@@ -81,7 +84,7 @@ export class CreateComponent {
   }
 
   removeFlashCard(pos: number) {
-    this.flashCards.controls.splice(pos, 1);
+    this.flashCards.removeAt(pos);
   }
 
   onTab(pos: number) {
