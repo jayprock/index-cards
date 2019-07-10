@@ -1,10 +1,8 @@
-import { COMMA, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
 
 import { ErrorDetails } from '../core/models/error-details';
 import { IndexCard } from '../core/models/index-card';
-import { MatChipInputEvent } from '@angular/material/chips';
-import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { StudyGuide } from '../core/models/study-guide';
 import { StudyGuideService } from '../core/services/study-guide.service';
@@ -15,31 +13,32 @@ import { StudyGuideService } from '../core/services/study-guide.service';
   styleUrls: ['./create.component.css']
 })
 export class CreateComponent implements OnInit {
-
-  @ViewChild('createForm') createForm: NgForm;
-
-  studyGuide: StudyGuide = {
-    studyGuideName: "",
-    description: "",
-    categories: [],
-    flashCards: [
-      { front: "", back: ""}
-    ]
-  };
-
+  
+  studyGuideForm: FormGroup;
   error: ErrorDetails = { serverError: false, message: null};
-
-  readonly separatorKeysCodes: number[] = [ SPACE, COMMA, SEMICOLON ];
-
-  constructor(private studyGuideService: StudyGuideService, private router: Router) { }
-
-  ngOnInit() {
+  
+  constructor(
+    private studyGuideService: StudyGuideService, 
+    private router: Router, 
+    private fb: FormBuilder
+    ) { }
+    
+    ngOnInit() {
+      this.studyGuideForm = this.fb.group({
+        studyGuideName: ['', Validators.required],
+        description: [''],
+        flashCards: this.fb.array([
+          this.fb.group({
+            front: ['', Validators.required],
+            back: ['', Validators.required]
+          })
+        ])
+      });
   }
 
   onSubmit() {
-    this.triggerValidation();
-    if (this.createForm.form.valid) {
-      this.studyGuideService.createStudyGuide(this.studyGuide).subscribe(result => {
+    if (this.studyGuideForm.valid) {
+      this.studyGuideService.createStudyGuide(this.constructStudyGuide()).subscribe(result => {
         this.error = {};
         this.router.navigateByUrl("/" + result.studyGuideId);
       }, error => {
@@ -52,41 +51,50 @@ export class CreateComponent implements OnInit {
     }
   }
 
-  addCategory(event: MatChipInputEvent) {
-    const category = event.value;
-    if (category && category.length > 0) {
-      this.studyGuide.categories.push(category);
-    }
-    event.input.value = '';
+  get flashCards() {
+    return this.studyGuideForm.get('flashCards') as FormArray;
   }
 
-  removeCategory(pos: number) {
-    if (this.studyGuide.categories[pos]) {
-      this.studyGuide.categories.splice(pos, 1);
-    }
-  }
-
+  
   addFlashCard() {
-    this.studyGuide.flashCards.push({ front: "", back: "" });
+    this.flashCards.push(this.fb.group({ front: '', back: ''}));
+    let newFormGroup = this.flashCards.at(this.flashCards.length - 1) as FormGroup;
+    console.log(newFormGroup);
+    newFormGroup.markAsPristine();
+    newFormGroup.markAsUntouched();
+    console.log(newFormGroup);
+  }
+  
+  private constructFlashCards(): IndexCard[] {
+    let flashCards: IndexCard[] = [];
+    this.flashCards.controls.forEach(control => {
+      let fg = control as FormGroup;
+      flashCards.push({ front: fg.get('front').value, back: fg.get('back').value });
+    });
+    return flashCards;
+  }
+  
+  private constructStudyGuide(): StudyGuide {
+    let studyGuide: StudyGuide = {
+      studyGuideName: this.studyGuideForm.get('studyGuideName').value,
+      description: this.studyGuideForm.get('description').value,
+      categories: [],
+      flashCards: this.constructFlashCards()
+    };
+    return studyGuide;
   }
 
   isRemovable() {
-    return this.studyGuide.flashCards.length > 1;
+    return this.flashCards.length > 1;
   }
 
   removeFlashCard(pos: number) {
-    this.studyGuide.flashCards.splice(pos, 1);
+    this.flashCards.removeAt(pos);
   }
 
   onTab(pos: number) {
-    if (pos == this.studyGuide.flashCards.length - 1) {
+    if (pos == this.flashCards.length - 1) {
       this.addFlashCard();
-    }
-  }
-
-  private triggerValidation() {
-    for (var fieldName in this.createForm.controls) {
-      this.createForm.controls[fieldName].markAsTouched();
     }
   }
 

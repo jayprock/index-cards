@@ -1,42 +1,31 @@
-
 <mat-card class="card-container">
     <h1 class="center-text">Create Study Guide</h1>
-    <form #createForm="ngForm" class="form-primary">
+    <form [formGroup]="studyGuideForm" class="form-primary">
         <h2>Basic Information</h2>
         <mat-form-field class="full-width">
-          <input matInput placeholder="Name" [(ngModel)]="studyGuide.studyGuideName" name="name" required>
+          <input matInput placeholder="Name" formControlName="studyGuideName" name="name" required>
         </mat-form-field>
         <mat-form-field class="full-width">
-            <mat-chip-list #categories>
-                <mat-chip *ngFor="let category of studyGuide.categories; index as i;" [removable]="true" [selectable]="false" (removed)="removeCategory(i)"  >
-                    {{ category }}
-                    <mat-icon matChipRemove *ngIf="true">cancel</mat-icon>
-                </mat-chip>
-                <input placeholder="Categories" 
-                    [matChipInputFor]="categories"
-                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                    (matChipInputTokenEnd)="addCategory($event)"
-                    [matChipInputAddOnBlur]="true"
-                    required>
-            </mat-chip-list>
+          <textarea matInput placeholder="Description" formControlName="description" name="description"></textarea>
         </mat-form-field>
-        <mat-form-field class="full-width">
-          <textarea matInput placeholder="Description" [(ngModel)]="studyGuide.description" name="description"></textarea>
-        </mat-form-field>
-        <h2>Flash Cards</h2>
-        <div *ngFor="let flashCard of studyGuide.flashCards; index as i; first as isFirst" class="flash-card full-width" appearance="outline">
-            <div *ngIf="isRemovable()" class="close" (click)="removeFlashCard(i)">X</div>
-            <mat-form-field class="full-width">
-                <textarea matInput placeholder="Front" [(ngModel)]="flashCard.front" name="front{{i}}" required></textarea>
-            </mat-form-field>
-            <mat-form-field class="full-width">
-                <textarea matInput placeholder="Back" [(ngModel)]="flashCard.back" name="back{{i}}" (keydown.Tab)="onTab(i)" required></textarea>
-            </mat-form-field>
+        <div formArrayName="flashCards">
+            <h2>Flash Cards</h2>
+            <div *ngFor="let flashCard of flashCards.controls; index as i; first as isFirst" class="flash-card full-width" appearance="outline">
+                <div [formGroupName]="i">
+                    <div *ngIf="isRemovable()" class="close" (click)="removeFlashCard(i)">X</div>
+                    <mat-form-field class="full-width">
+                        <textarea matInput placeholder="Front" formControlName="front" name="front{{i}}" required></textarea>
+                    </mat-form-field>
+                    <mat-form-field class="full-width">
+                        <textarea matInput placeholder="Back" formControlName="back" name="back{{i}}" (keydown.Tab)="onTab(i)" required></textarea>
+                    </mat-form-field>
+                </div>
+            </div>
+            <button type="button" mat-fab color="accent" (click)="addFlashCard()" class="add-button">+</button>
         </div>
-        <button mat-fab color="accent" (click)="addFlashCard()" class="add-button">+</button>
+        <p class="error-text" *ngIf="error.serverError || (error.message && !studyGuideForm.valid)">{{ error?.message }} </p>
+        <div class="button-container">
+            <button mat-raised-button color="primary" class="big-button" (click)="onSubmit()">Submit</button>    
+        </div>
     </form>
 </mat-card>
-<div class="button-container">
-    <button mat-raised-button color="primary" class="big-button" (click)="onSubmit()">Submit</button>    
-</div>
-<p class="error-text" *ngIf="error.serverError || (error.message && createForm.form.invalid)">{{ error?.message }} </p>
