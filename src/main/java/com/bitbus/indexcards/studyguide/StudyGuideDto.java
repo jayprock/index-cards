@@ -14,6 +14,7 @@ public class StudyGuideDto {
     private long studyGuideId;
     private String studyGuideName;
     private String description;
+    private List<String> categories;
     private List<FlashCardDto> flashCards;
 
     public static StudyGuideDto get(StudyGuide studyGuide, List<IndexCard> flashCards) {

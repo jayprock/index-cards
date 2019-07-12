@@ -104,12 +104,12 @@ export class CreateComponent implements OnInit {
     });
     return flashCards;
   }
-  
+
   private constructStudyGuide(): StudyGuide {
     let studyGuide: StudyGuide = {
       studyGuideName: this.studyGuideForm.get('studyGuideName').value,
       description: this.studyGuideForm.get('description').value,
-      categories: [],
+      categories: this.studyGuideForm.get('categories').value,
       flashCards: this.constructFlashCards()
     };
     return studyGuide;

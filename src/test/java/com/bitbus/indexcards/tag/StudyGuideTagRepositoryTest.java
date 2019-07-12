@@ -1,5 +1,7 @@
 package com.bitbus.indexcards.tag;
 
+import java.util.Optional;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,8 +20,8 @@ public class StudyGuideTagRepositoryTest {
     private StudyGuideTagRepository studyGuideTagRepo;
 
     @Test
-    public void testNameMustBeUnique() {
-        // Geography category is preloaded
+    public void testCreateDuplicateNameFails() {
+        // Geography tag is preloaded
         StudyGuideTag tag = new StudyGuideTag();
         tag.setName("Geography");
         try {
@@ -28,5 +30,14 @@ public class StudyGuideTagRepositoryTest {
         } catch (Exception e) {
             log.info("Received an expected Exception after violating the unique name constraint", e);
         }
+    }
+
+    @Test
+    public void testFindByName() {
+        // Geography tag is preloaded
+        Optional<StudyGuideTag> tag = studyGuideTagRepo.findByName("Geography");
+        Assert.assertTrue(tag.isPresent());
+        tag = studyGuideTagRepo.findByName("NameDoesNotExist");
+        Assert.assertFalse(tag.isPresent());
     }
 }
