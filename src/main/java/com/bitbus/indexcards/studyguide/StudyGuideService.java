@@ -27,6 +27,7 @@ public class StudyGuideService {
         return optStudyGuide.orElseThrow(() -> new StudyGuideNotFoundException(id));
     }
 
+    @Transactional
     public StudyGuide create(StudyGuide studyGuide, List<String> categories) {
         List<StudyGuideTag> tags = new ArrayList<>();
         for (String category : categories) {
