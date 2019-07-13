@@ -22,7 +22,7 @@ export class CreateComponent implements OnInit {
 
   readonly separatorKeysCodes: number[] = [ SPACE, COMMA, SEMICOLON ];
 
-  categories = [];
+  categoryNames = [];
   categoryOptions: string[] = ["Math", "Science", "History"];
 
   constructor(
@@ -34,7 +34,7 @@ export class CreateComponent implements OnInit {
     ngOnInit() {
       this.studyGuideForm = this.fb.group({
         studyGuideName: ['', Validators.required],
-        categories: [this.categories],
+        categories: [this.categoryNames, this.categoriesValidator()],
         description: [''],
         flashCards: this.fb.array([
           this.fb.group({
@@ -43,7 +43,7 @@ export class CreateComponent implements OnInit {
           })
         ])
       });
-      this.studyGuideForm.controls['categories'].setValue(this.categories);
+      this.studyGuideForm.controls['categories'].setValue(this.categoryNames);
   }
 
   onSubmit() {
@@ -72,13 +72,15 @@ export class CreateComponent implements OnInit {
 
   private addCategory(category: string) {
     if (category && category.length > 0) {
-      this.categories.push(category);
+      this.categoryNames.push(category);
+      this.studyGuideForm.controls['categories'].updateValueAndValidity();
     }
   }
 
   removeCategory(pos: number) {
-    if (this.categories[pos]) {
-      this.categories.splice(pos, 1);
+    if (this.categoryNames[pos]) {
+      this.categoryNames.splice(pos, 1);
+      this.studyGuideForm.controls['categories'].updateValueAndValidity();
     }
   }
 
@@ -90,10 +92,6 @@ export class CreateComponent implements OnInit {
   addFlashCard() {
     this.flashCards.push(this.fb.group({ front: '', back: ''}));
     let newFormGroup = this.flashCards.at(this.flashCards.length - 1) as FormGroup;
-    console.log(newFormGroup);
-    newFormGroup.markAsPristine();
-    newFormGroup.markAsUntouched();
-    console.log(newFormGroup);
   }
   
   private constructFlashCards(): IndexCard[] {
@@ -126,6 +124,16 @@ export class CreateComponent implements OnInit {
   onTab(pos: number) {
     if (pos == this.flashCards.length - 1) {
       this.addFlashCard();
+    }
+  }
+
+  categoriesValidator(): ValidatorFn {
+    return (control: AbstractControl): {[key: string]: any} | null => {
+      if (this.studyGuideForm && this.categoryNames.length < 1) {
+        return {'invalidCategories': { value: 'At least 1 category is required'}};
+      } else {
+        return null;
+      }
     }
   }
 
