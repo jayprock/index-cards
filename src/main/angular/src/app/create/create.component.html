@@ -16,10 +16,11 @@
                     [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                     (matChipInputTokenEnd)="onCategoryInputTokenEnd($event)"
                     [matChipInputAddOnBlur]="true"
-                    [matAutocomplete]="auto">
+                    [matAutocomplete]="auto"
+                    [formControl]="categoryInput">
             </mat-chip-list>
             <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onCategorySelected($event)">
-                <mat-option *ngFor="let option of categoryOptions" [value]="option">
+                <mat-option *ngFor="let option of categoriesFound | async" [value]="option">
                     {{ option }}
                 </mat-option>
             </mat-autocomplete>

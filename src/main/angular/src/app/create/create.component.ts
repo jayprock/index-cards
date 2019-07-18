@@ -1,13 +1,16 @@
-import { AbstractControl, FormArray, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { COMMA, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
 import { Component, OnInit } from '@angular/core';
+import { debounceTime, filter, map, startWith, switchMap } from 'rxjs/operators';
 
 import { ErrorDetails } from '../core/models/error-details';
 import { IndexCard } from '../core/models/index-card';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
+import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { StudyGuide } from '../core/models/study-guide';
+import { StudyGuideCategoryService } from '../core/services/study-guide-category.service';
 import { StudyGuideService } from '../core/services/study-guide.service';
 
 @Component({
@@ -21,12 +24,13 @@ export class CreateComponent implements OnInit {
   error: ErrorDetails = { serverError: false, message: null};
 
   readonly separatorKeysCodes: number[] = [ SPACE, COMMA, SEMICOLON ];
-
+  categoryInput = new FormControl();
   categoryNames = [];
-  categoryOptions: string[] = ["Math", "Science", "History"];
+  categoriesFound: Observable<string[]>;
 
   constructor(
     private studyGuideService: StudyGuideService, 
+    private categoryService: StudyGuideCategoryService,
     private router: Router, 
     private fb: FormBuilder
     ) { }
@@ -43,7 +47,12 @@ export class CreateComponent implements OnInit {
           })
         ])
       });
-      this.studyGuideForm.controls['categories'].setValue(this.categoryNames);
+      this.categoriesFound = this.categoryInput.valueChanges
+        .pipe(
+          debounceTime(250),
+          filter(value => value.length > 2),
+          switchMap(value => this.categoryService.search(value))
+        );
   }
 
   onSubmit() {
