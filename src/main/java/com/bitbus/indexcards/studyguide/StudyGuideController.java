@@ -60,6 +60,7 @@ public class StudyGuideController {
 
     @GetMapping
     public List<StudyGuideDto> searchStudyGuides(@RequestParam(name = "search", required = true) String searchParam) {
+        // TODO - Is there any risk logging a string without checking it first?
         log.info("Performing a search against \"{}\"", searchParam);
         List<StudyGuide> studyGuides = studyGuideService.search(searchParam);
         log.info("Found {} study guides", studyGuides.size());

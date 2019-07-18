@@ -1,5 +1,6 @@
 package com.bitbus.indexcards.tag;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.Assert;
@@ -7,12 +8,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import lombok.extern.slf4j.Slf4j;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
+@Sql("./studyguide-tag-data.sql")
 @Slf4j
 public class StudyGuideTagRepositoryTest {
 
@@ -39,5 +42,11 @@ public class StudyGuideTagRepositoryTest {
         Assert.assertTrue(tag.isPresent());
         tag = studyGuideTagRepo.findByName("NameDoesNotExist");
         Assert.assertFalse(tag.isPresent());
+    }
+
+    @Test
+    public void testFindByNameIgnoreCaseContaining() {
+        List<StudyGuideTag> results = studyGuideTagRepo.findByNameIgnoreCaseContaining("food");
+        Assert.assertEquals(3, results.size());
     }
 }
