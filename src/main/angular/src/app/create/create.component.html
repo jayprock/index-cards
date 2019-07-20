@@ -12,12 +12,13 @@
                     <mat-icon matChipRemove *ngIf="true">cancel</mat-icon>
                 </mat-chip>
                 <input placeholder="Categories" 
+                    #categoryInputEl
                     [matChipInputFor]="categoriesList"
                     [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                     (matChipInputTokenEnd)="onCategoryInputTokenEnd($event)"
                     [matChipInputAddOnBlur]="true"
                     [matAutocomplete]="auto"
-                    [formControl]="categoryInput">
+                    [formControl]="categoryInputCtrl">
             </mat-chip-list>
             <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onCategorySelected($event)">
                 <mat-option *ngFor="let option of categoriesFound | async" [value]="option">

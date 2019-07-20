@@ -1,11 +1,11 @@
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { COMMA, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { debounceTime, filter, map, startWith, switchMap } from 'rxjs/operators';
 
 import { ErrorDetails } from '../core/models/error-details';
 import { IndexCard } from '../core/models/index-card';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
@@ -24,9 +24,12 @@ export class CreateComponent implements OnInit {
   error: ErrorDetails = { serverError: false, message: null};
 
   readonly separatorKeysCodes: number[] = [ SPACE, COMMA, SEMICOLON ];
-  categoryInput = new FormControl();
+  categoryInputCtrl = new FormControl();
   categoryNames = [];
   categoriesFound: Observable<string[]>;
+
+  @ViewChild("categoryInputEl") categoryInputEl: ElementRef<HTMLInputElement>;
+  @ViewChild("auto") autoComplete: MatAutocomplete;
 
   constructor(
     private studyGuideService: StudyGuideService, 
@@ -47,7 +50,7 @@ export class CreateComponent implements OnInit {
           })
         ])
       });
-      this.categoriesFound = this.categoryInput.valueChanges
+      this.categoriesFound = this.categoryInputCtrl.valueChanges
         .pipe(
           debounceTime(250),
           filter(value => value.length > 2),
@@ -71,12 +74,16 @@ export class CreateComponent implements OnInit {
   }
 
   onCategoryInputTokenEnd(event: MatChipInputEvent) {
-    this.addCategory(event.value);
-    event.input.value = '';
+    if (!this.autoComplete.isOpen) {
+      this.addCategory(event.value);
+      event.input.value = '';
+    }
   }
 
   onCategorySelected(event: MatAutocompleteSelectedEvent) {
     this.addCategory(event.option.value);
+    this.categoryInputEl.nativeElement.value = '';
+    this.categoryInputCtrl.setValue(null);
   }
 
   private addCategory(category: string) {
