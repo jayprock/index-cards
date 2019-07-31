@@ -55,6 +55,7 @@ export class CreateComponent implements OnInit {
           debounceTime(250),
           startWith(''),
           filter(value => value && value.length > 2),
+          filter(value => !this.categoryNames.includes(value.toLowerCase())),
           switchMap(value => this.categoryService.search(value))
         );
   }
@@ -89,7 +90,7 @@ export class CreateComponent implements OnInit {
 
   private addCategory(category: string) {
     if (category && category.length > 0) {
-      this.categoryNames.push(category);
+      this.categoryNames.push(category.toLowerCase());
       this.studyGuideForm.controls['categories'].updateValueAndValidity();
     }
   }

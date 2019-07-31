@@ -31,10 +31,11 @@ public class StudyGuideService {
     public StudyGuide create(StudyGuide studyGuide, List<String> categories) {
         List<StudyGuideTag> tags = new ArrayList<>();
         for (String category : categories) {
-            Optional<StudyGuideTag> optTag = tagRepo.findByName(category);
+            String lowerCaseCategory = category.toLowerCase();
+            Optional<StudyGuideTag> optTag = tagRepo.findByName(lowerCaseCategory);
             StudyGuideTag tag = optTag.orElseGet(() -> {
                 StudyGuideTag t = new StudyGuideTag();
-                t.setName(category);
+                t.setName(lowerCaseCategory);
                 return t;
             });
             tags.add(tag);

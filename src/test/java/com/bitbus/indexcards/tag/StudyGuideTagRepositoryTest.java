@@ -38,7 +38,7 @@ public class StudyGuideTagRepositoryTest {
     @Test
     public void testFindByName() {
         // Geography tag is preloaded
-        Optional<StudyGuideTag> tag = studyGuideTagRepo.findByName("Geography");
+        Optional<StudyGuideTag> tag = studyGuideTagRepo.findByName("geography");
         Assert.assertTrue(tag.isPresent());
         tag = studyGuideTagRepo.findByName("NameDoesNotExist");
         Assert.assertFalse(tag.isPresent());
