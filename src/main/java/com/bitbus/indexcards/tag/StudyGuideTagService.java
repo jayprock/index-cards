@@ -11,7 +11,11 @@ public class StudyGuideTagService {
     @Autowired
     private StudyGuideTagRepository tagRepo;
 
-    public List<StudyGuideTag> searchByName(String searchParam) {
-        return tagRepo.findByNameIgnoreCaseContaining(searchParam);
+    public List<StudyGuideTag> searchByName(String name) {
+        return tagRepo.searchByName(name);
+    }
+
+    public List<StudyGuideTag> searchByNameWithExclusions(String name, List<String> exclusions) {
+        return tagRepo.searchByNameWithExclusions(name, exclusions);
     }
 }

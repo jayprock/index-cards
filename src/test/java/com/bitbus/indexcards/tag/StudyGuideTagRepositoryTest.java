@@ -1,5 +1,6 @@
 package com.bitbus.indexcards.tag;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,8 +46,22 @@ public class StudyGuideTagRepositoryTest {
     }
 
     @Test
-    public void testFindByNameIgnoreCaseContaining() {
-        List<StudyGuideTag> results = studyGuideTagRepo.findByNameIgnoreCaseContaining("food");
+    public void testSearchByName() {
+        List<StudyGuideTag> results = studyGuideTagRepo.searchByName("food");
         Assert.assertEquals(3, results.size());
+    }
+
+    @Test
+    public void testSearchByNameWithExclusions() {
+        {
+            List<StudyGuideTag> results =
+                    studyGuideTagRepo.searchByNameWithExclusions("FoOd", Arrays.asList("Healthy Food"));
+            Assert.assertEquals(2, results.size());
+        }
+        {
+            List<StudyGuideTag> results =
+                    studyGuideTagRepo.searchByNameWithExclusions("FoOd", Arrays.asList("Healthy Food", "FOOD"));
+            Assert.assertEquals(1, results.size());
+        }
     }
 }
