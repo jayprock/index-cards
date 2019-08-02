@@ -89,7 +89,7 @@ export class CreateComponent implements OnInit {
   }
 
   private addCategory(category: string) {
-    if (category && category.length > 0) {
+    if (category && category.length > 0 && !this.categoryNames.includes(category.toLowerCase())) {
       this.categoryNames.push(category.toLowerCase());
       this.studyGuideForm.controls['categories'].updateValueAndValidity();
     }
