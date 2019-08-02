@@ -56,7 +56,7 @@ export class CreateComponent implements OnInit {
           startWith(''),
           filter(value => value && value.length > 2),
           filter(value => !this.categoryNames.includes(value.toLowerCase())),
-          switchMap(value => this.categoryService.search(value))
+          switchMap(value => this.categoryService.search(value, this.categoryNames))
         );
   }
 

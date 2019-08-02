@@ -10,7 +10,11 @@ export class StudyGuideCategoryService {
 
     constructor(private http: HttpClient) {}
 
-    search(param: string): Observable<string[]> {
-        return this.http.get<string[]>(`${REST_PATHS.studyGuideCategories}?search=${param}`);
+    search(param: string, exclusions ?: string[]): Observable<string[]> {
+        if (exclusions && exclusions.length > 0) {
+            return this.http.get<string[]>(`${REST_PATHS.studyGuideCategories}?search=${param}&exclude=${exclusions.join()}`);
+        } else {
+            return this.http.get<string[]>(`${REST_PATHS.studyGuideCategories}?search=${param}`);
+        }
     }
 }
