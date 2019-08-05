@@ -1,3 +1,4 @@
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
 import {MatChipsModule} from '@angular/material/chips';
@@ -8,6 +9,7 @@ import {NgModule} from '@angular/core';
 
 @NgModule({
   imports: [
+    MatAutocompleteModule,
     MatButtonModule,
     MatCardModule,
     MatChipsModule,
@@ -16,6 +18,7 @@ import {NgModule} from '@angular/core';
     MatToolbarModule
   ],
   exports: [
+    MatAutocompleteModule,
     MatButtonModule,
     MatCardModule,
     MatChipsModule,

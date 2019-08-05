@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -40,14 +41,16 @@ public class StudyGuide {
     @OneToMany(mappedBy = "studyGuide", cascade = CascadeType.ALL)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @Size(min = 1)
+    @Size(min = 1, message = "A study guide must have at least 1 flash card")
     private List<IndexCard> indexCards;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(name = "map_study_guide_tag", joinColumns = @JoinColumn(name = "id"),
-            inverseJoinColumns = @JoinColumn(name = "studyGuideTagId"))
+            inverseJoinColumns = @JoinColumn(name = "studyGuideTagId"),
+            indexes = {@Index(name = "map_study_guide_tag_unq", columnList = "id, studyGuideTagId", unique = true)})
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
+    @Size(min = 1, message = "At least one study guide tag must be provided")
     private List<StudyGuideTag> tags;
 
 }

@@ -1,6 +1,6 @@
 insert into STUDY_GUIDE values(1, 'US Capitals', 'Capitals of the 50 states');
 
-insert into STUDY_GUIDE_TAG values(1, 'Geography');
+insert into STUDY_GUIDE_TAG values(1, 'geography');
 
 insert into MAP_STUDY_GUIDE_TAG values (1, 1);
 

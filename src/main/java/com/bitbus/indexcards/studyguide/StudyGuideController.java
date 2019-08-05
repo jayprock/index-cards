@@ -52,7 +52,7 @@ public class StudyGuideController {
     @PostMapping
     public StudyGuideDto createStudyGuide(@RequestBody StudyGuideDto studyGuideDto) {
         log.info("Creating study guide with name {}", studyGuideDto.getStudyGuideName());
-        StudyGuide studyGuide = studyGuideService.create(studyGuideDto.toStudyGuide());
+        StudyGuide studyGuide = studyGuideService.create(studyGuideDto.toStudyGuide(), studyGuideDto.getCategories());
         log.info("Created study guide {}:{} with {} flash cards", studyGuide.getId(), studyGuide.getName(),
                 studyGuide.getIndexCards().size());
         return StudyGuideDto.get(studyGuide, studyGuide.getIndexCards());
@@ -60,6 +60,7 @@ public class StudyGuideController {
 
     @GetMapping
     public List<StudyGuideDto> searchStudyGuides(@RequestParam(name = "search", required = true) String searchParam) {
+        // TODO - Is there any risk logging a string without checking it first?
         log.info("Performing a search against \"{}\"", searchParam);
         List<StudyGuide> studyGuides = studyGuideService.search(searchParam);
         log.info("Found {} study guides", studyGuides.size());

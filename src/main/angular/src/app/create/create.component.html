@@ -6,6 +6,27 @@
           <input matInput placeholder="Name" formControlName="studyGuideName" name="name" required>
         </mat-form-field>
         <mat-form-field class="full-width">
+            <mat-chip-list #categoriesList formControlName="categories" required>
+                <mat-chip *ngFor="let category of categoryNames; index as i;" [removable]="true" [selectable]="false" (removed)="removeCategory(i)"  >
+                    {{ category }}
+                    <mat-icon matChipRemove *ngIf="true">cancel</mat-icon>
+                </mat-chip>
+                <input placeholder="Categories" 
+                    #categoryInputEl
+                    [matChipInputFor]="categoriesList"
+                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                    (matChipInputTokenEnd)="onCategoryInputTokenEnd($event)"
+                    [matChipInputAddOnBlur]="true"
+                    [matAutocomplete]="auto"
+                    [formControl]="categoryInputCtrl">
+            </mat-chip-list>
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onCategorySelected($event)">
+                <mat-option *ngFor="let option of categoriesFound | async" [value]="option">
+                    {{ option }}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+        <mat-form-field class="full-width">
           <textarea matInput placeholder="Description" formControlName="description" name="description"></textarea>
         </mat-form-field>
         <div formArrayName="flashCards">

@@ -1,10 +1,16 @@
-import { AbstractControl, FormArray, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
-import { Component, OnInit } from '@angular/core';
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { COMMA, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { debounceTime, filter, map, startWith, switchMap, tap } from 'rxjs/operators';
 
 import { ErrorDetails } from '../core/models/error-details';
 import { IndexCard } from '../core/models/index-card';
+import { MatChipInputEvent } from '@angular/material/chips';
+import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { StudyGuide } from '../core/models/study-guide';
+import { StudyGuideCategoryService } from '../core/services/study-guide-category.service';
 import { StudyGuideService } from '../core/services/study-guide.service';
 
 @Component({
@@ -16,9 +22,18 @@ export class CreateComponent implements OnInit {
   
   studyGuideForm: FormGroup;
   error: ErrorDetails = { serverError: false, message: null};
-  
+
+  readonly separatorKeysCodes: number[] = [ SPACE, COMMA, SEMICOLON ];
+  categoryInputCtrl = new FormControl();
+  categoryNames = [];
+  categoriesFound: Observable<string[]>;
+
+  @ViewChild("categoryInputEl") categoryInputEl: ElementRef<HTMLInputElement>;
+  @ViewChild("auto") autoComplete: MatAutocomplete;
+
   constructor(
     private studyGuideService: StudyGuideService, 
+    private categoryService: StudyGuideCategoryService,
     private router: Router, 
     private fb: FormBuilder
     ) { }
@@ -26,6 +41,7 @@ export class CreateComponent implements OnInit {
     ngOnInit() {
       this.studyGuideForm = this.fb.group({
         studyGuideName: ['', Validators.required],
+        categories: [this.categoryNames, [this.categoriesValidator(), Validators.pattern('^[a-z][a-z0-9-]*$')]],
         description: [''],
         flashCards: this.fb.array([
           this.fb.group({
@@ -34,6 +50,19 @@ export class CreateComponent implements OnInit {
           })
         ])
       });
+      this.categoriesFound = this.categoryInputCtrl.valueChanges
+        .pipe(
+          debounceTime(250),
+          startWith(''),
+          filter(value => value && value.length > 2),
+          tap(value => {
+            if (value.endsWith(" ")) {
+              console.log(`Close autocomplete, received: \"${value}\"`)
+            }
+          }),
+          filter(value => !this.categoryNames.includes(value.toLowerCase())),
+          switchMap(value => this.categoryService.search(value, this.categoryNames))
+        );
   }
 
   onSubmit() {
@@ -51,6 +80,33 @@ export class CreateComponent implements OnInit {
     }
   }
 
+  onCategoryInputTokenEnd(event: MatChipInputEvent) {
+    if (!this.autoComplete.isOpen) {
+      this.addCategory(event.value);
+      event.input.value = '';
+    }
+  }
+
+  onCategorySelected(event: MatAutocompleteSelectedEvent) {
+    this.addCategory(event.option.value);
+    this.categoryInputEl.nativeElement.value = '';
+    this.categoryInputCtrl.setValue(null);
+  }
+
+  private addCategory(category: string) {
+    if (category && category.length > 0 && !this.categoryNames.includes(category.toLowerCase())) {
+      this.categoryNames.push(category.toLowerCase());
+      this.studyGuideForm.controls['categories'].updateValueAndValidity();
+    }
+  }
+
+  removeCategory(pos: number) {
+    if (this.categoryNames[pos]) {
+      this.categoryNames.splice(pos, 1);
+      this.studyGuideForm.controls['categories'].updateValueAndValidity();
+    }
+  }
+
   get flashCards() {
     return this.studyGuideForm.get('flashCards') as FormArray;
   }
@@ -59,10 +115,6 @@ export class CreateComponent implements OnInit {
   addFlashCard() {
     this.flashCards.push(this.fb.group({ front: '', back: ''}));
     let newFormGroup = this.flashCards.at(this.flashCards.length - 1) as FormGroup;
-    console.log(newFormGroup);
-    newFormGroup.markAsPristine();
-    newFormGroup.markAsUntouched();
-    console.log(newFormGroup);
   }
   
   private constructFlashCards(): IndexCard[] {
@@ -73,12 +125,12 @@ export class CreateComponent implements OnInit {
     });
     return flashCards;
   }
-  
+
   private constructStudyGuide(): StudyGuide {
     let studyGuide: StudyGuide = {
       studyGuideName: this.studyGuideForm.get('studyGuideName').value,
       description: this.studyGuideForm.get('description').value,
-      categories: [],
+      categories: this.studyGuideForm.get('categories').value,
       flashCards: this.constructFlashCards()
     };
     return studyGuide;
@@ -95,6 +147,16 @@ export class CreateComponent implements OnInit {
   onTab(pos: number) {
     if (pos == this.flashCards.length - 1) {
       this.addFlashCard();
+    }
+  }
+
+  categoriesValidator(): ValidatorFn {
+    return (control: AbstractControl): {[key: string]: any} | null => {
+      if (this.studyGuideForm && this.categoryNames.length < 1) {
+        return {'invalidCategories': { value: 'At least 1 category is required'}};
+      } else {
+        return null;
+      }
     }
   }
 
