@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Pattern;
 
 import com.bitbus.indexcards.studyguide.StudyGuide;
 
@@ -26,6 +27,7 @@ public class StudyGuideTag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long studyGuideTagId;
 
+    @Pattern(regexp = "^[a-z][a-z0-9-]*$")
     private String name;
 
     @ManyToMany(mappedBy = "tags")

@@ -41,7 +41,7 @@ export class CreateComponent implements OnInit {
     ngOnInit() {
       this.studyGuideForm = this.fb.group({
         studyGuideName: ['', Validators.required],
-        categories: [this.categoryNames, this.categoriesValidator()],
+        categories: [this.categoryNames, [this.categoriesValidator(), Validators.pattern('^[a-z][a-z0-9-]*$')]],
         description: [''],
         flashCards: this.fb.array([
           this.fb.group({
@@ -55,6 +55,11 @@ export class CreateComponent implements OnInit {
           debounceTime(250),
           startWith(''),
           filter(value => value && value.length > 2),
+          tap(value => {
+            if (value.endsWith(" ")) {
+              console.log(`Close autocomplete, received: \"${value}\"`)
+            }
+          }),
           filter(value => !this.categoryNames.includes(value.toLowerCase())),
           switchMap(value => this.categoryService.search(value, this.categoryNames))
         );
