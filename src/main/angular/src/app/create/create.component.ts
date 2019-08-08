@@ -41,7 +41,7 @@ export class CreateComponent implements OnInit {
     ngOnInit() {
       this.studyGuideForm = this.fb.group({
         studyGuideName: ['', Validators.required],
-        categories: [this.categoryNames, [this.categoriesValidator(), Validators.pattern('^[a-z][a-z0-9-]*$')]],
+        categories: [this.categoryNames, [this.categoriesValidator()]],
         description: [''],
         flashCards: this.fb.array([
           this.fb.group({
@@ -155,7 +155,14 @@ export class CreateComponent implements OnInit {
       if (this.studyGuideForm && this.categoryNames.length < 1) {
         return {'invalidCategories': { value: 'At least 1 category is required'}};
       } else {
-        return null;
+        let error = null;
+        for (let name of this.categoryNames) {
+          if (!name.match('^[a-z][a-z0-9-]{1,}$')) {
+            error = {'invalidCategories': { value: 'A category was detected that uses an invalid format'}};
+            break;
+          }
+        }
+        return error;
       }
     }
   }
