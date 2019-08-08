@@ -2,7 +2,7 @@ import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Valida
 import { COMMA, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { debounceTime, filter, map, startWith, switchMap, tap } from 'rxjs/operators';
+import { debounceTime, filter, startWith, switchMap } from 'rxjs/operators';
 
 import { ErrorDetails } from '../core/models/error-details';
 import { IndexCard } from '../core/models/index-card';
@@ -41,7 +41,7 @@ export class CreateComponent implements OnInit {
     ngOnInit() {
       this.studyGuideForm = this.fb.group({
         studyGuideName: ['', Validators.required],
-        categories: [this.categoryNames, [this.categoriesValidator(), Validators.pattern('^[a-z][a-z0-9-]*$')]],
+        categories: [this.categoryNames, [this.categoriesValidator()]],
         description: [''],
         flashCards: this.fb.array([
           this.fb.group({
@@ -55,11 +55,6 @@ export class CreateComponent implements OnInit {
           debounceTime(250),
           startWith(''),
           filter(value => value && value.length > 2),
-          tap(value => {
-            if (value.endsWith(" ")) {
-              console.log(`Close autocomplete, received: \"${value}\"`)
-            }
-          }),
           filter(value => !this.categoryNames.includes(value.toLowerCase())),
           switchMap(value => this.categoryService.search(value, this.categoryNames))
         );
@@ -155,7 +150,14 @@ export class CreateComponent implements OnInit {
       if (this.studyGuideForm && this.categoryNames.length < 1) {
         return {'invalidCategories': { value: 'At least 1 category is required'}};
       } else {
-        return null;
+        let error = null;
+        for (let name of this.categoryNames) {
+          if (!name.match('^[a-z][a-z0-9-]{1,}$')) {
+            error = {'invalidCategories': { value: 'A category was detected that uses an invalid format'}};
+            break;
+          }
+        }
+        return error;
       }
     }
   }
