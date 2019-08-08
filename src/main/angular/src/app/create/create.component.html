@@ -1,5 +1,4 @@
-<mat-card class="card-container">
-    <h1 class="center-text">Create Study Guide</h1>
+<idx-form-panel [formHeader]="'Create Study Guide'">
     <form [formGroup]="studyGuideForm" class="form-primary">
         <h2>Basic Information</h2>
         <mat-form-field class="full-width">
@@ -48,5 +47,5 @@
         <div class="button-container">
             <button mat-raised-button color="primary" class="big-button" (click)="onSubmit()">Submit</button>    
         </div>
-    </form>
-</mat-card>
+    </form>    
+</idx-form-panel>

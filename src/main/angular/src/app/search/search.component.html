@@ -1,5 +1,4 @@
-<mat-card class="card-container">
-    <h1 class="center-text">Find Study Guide</h1>
+<idx-form-panel [formHeader]="'Find Study Guide'">
     <form #searchForm="ngForm" class="form-primary">
         <div class="flex-container">
             <mat-form-field class="flex-grow">
@@ -18,4 +17,4 @@
             <ng-template #noResults>No results found.</ng-template>
         </div>
     </form>
-</mat-card>
+</idx-form-panel>

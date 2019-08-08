@@ -1,15 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from './material.module';
 import { NgModule } from '@angular/core';
+import { FormPanelComponent } from './form-panel/form-panel.component';
 
 @NgModule({
-  declarations: [],
+  declarations: [FormPanelComponent],
   imports: [
     CommonModule,
     MaterialModule
   ],
   exports: [
-    MaterialModule
+    MaterialModule,
+    FormPanelComponent
   ]
 })
 export class SharedModule { }
