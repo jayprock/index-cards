@@ -1,16 +1,19 @@
 import { CommonModule } from '@angular/common';
+import { FormPanelComponent } from './form-panel/form-panel.component';
 import { MaterialModule } from './material.module';
 import { NgModule } from '@angular/core';
-import { FormPanelComponent } from './form-panel/form-panel.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [FormPanelComponent],
   imports: [
     CommonModule,
-    MaterialModule
+    MaterialModule,
+    ReactiveFormsModule
   ],
   exports: [
     MaterialModule,
+    ReactiveFormsModule,
     FormPanelComponent
   ]
 })

@@ -1,3 +1,17 @@
-<p>
-  register works!
-</p>
+<idx-form-panel [formHeader]="'Register'">
+  <form [formGroup]="registrationForm" class="form-primary">
+    <mat-form-field class="full-width">
+      <input matInput placeholder="Username" formControlName="username" name="username" required>
+    </mat-form-field>
+    <mat-form-field class="full-width">
+      <input matInput placeholder="Email" formControlName="email" name="email" required>
+    </mat-form-field>
+    <mat-form-field class="full-width">
+      <input matInput type="password" placeholder="Password" formControlName="password1" name="password1" required>
+    </mat-form-field>
+    <mat-form-field class="full-width">
+      <input matInput type="password" placeholder="Confirm Password" formControlName="password2" name="password2"
+        required>
+    </mat-form-field>
+  </form>
+</idx-form-panel>

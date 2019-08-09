@@ -11,7 +11,6 @@ import { SharedModule } from '../shared/shared.module';
     CommonModule,
     CreateRoutingModule,
     SharedModule,
-    ReactiveFormsModule
   ]
 })
 export class CreateModule { }
