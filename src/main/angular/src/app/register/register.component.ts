@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
+import { User } from '../core/models/user';
+import { UserService } from '../core/services/user.service';
+
 @Component({
   selector: 'idx-register',
   templateUrl: './register.component.html',
@@ -11,7 +14,8 @@ export class RegisterComponent implements OnInit {
   registrationForm: FormGroup;
 
   constructor(
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private userService: UserService
   ) { }
 
   ngOnInit() {
@@ -23,4 +27,26 @@ export class RegisterComponent implements OnInit {
     });
   }
 
+  onSubmit() {
+    let user: User = {
+      username: this.username,
+      email: this.email,
+      password: this.password
+    };
+    this.userService.registerUser(user).subscribe(result => {
+      console.log(`Done registering user, got result: ${result}`);
+    });
+  }
+
+  get username(): string {
+    return this.registrationForm.get('username').value;
+  }
+
+  get email(): string {
+    return this.registrationForm.get('email').value;
+  }
+
+  get password(): string {
+    return this.registrationForm.get('password1').value;
+  }
 }
