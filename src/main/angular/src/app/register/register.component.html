@@ -8,6 +8,7 @@
     </mat-form-field>
     <mat-form-field class="full-width">
       <input matInput type="password" placeholder="Password" formControlName="password1" name="password1" required>
+      <mat-error *ngIf="password.invalid">{{ getPasswordError() }}</mat-error>
     </mat-form-field>
     <mat-form-field class="full-width">
       <input matInput type="password" placeholder="Confirm Password" formControlName="password2" name="password2"

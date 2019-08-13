@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { User } from '../core/models/user';
 import { UserService } from '../core/services/user.service';
@@ -10,7 +10,9 @@ import { UserService } from '../core/services/user.service';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
-
+  
+  readonly MIN_PASSWORD_LENGTH = 8;
+  
   registrationForm: FormGroup;
 
   constructor(
@@ -22,7 +24,7 @@ export class RegisterComponent implements OnInit {
     this.registrationForm = this.fb.group({
       username: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      password1: ['', Validators.required],
+      password1: ['', [Validators.required, Validators.minLength(this.MIN_PASSWORD_LENGTH)]],
       password2: ['', Validators.required]
     });
   }
@@ -31,7 +33,7 @@ export class RegisterComponent implements OnInit {
     let user: User = {
       username: this.username,
       email: this.email,
-      password: this.password
+      password: this.password.value
     };
     this.userService.registerUser(user).subscribe(result => {
       console.log(`Done registering user, got result: ${result}`);
@@ -46,7 +48,17 @@ export class RegisterComponent implements OnInit {
     return this.registrationForm.get('email').value;
   }
 
-  get password(): string {
-    return this.registrationForm.get('password1').value;
+  get password(): FormControl {
+    return this.registrationForm.get('password1') as FormControl;
+  }
+
+  getPasswordError(): string {
+    if (this.password.hasError('required')) {
+      return "The password is required";
+    }
+    if (this.password.hasError('minlength')) {
+      return `The password must have at least ${this.MIN_PASSWORD_LENGTH} characters`;
+    }
+    return '';
   }
 }
