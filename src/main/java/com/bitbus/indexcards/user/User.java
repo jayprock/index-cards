@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.Email;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -22,6 +23,7 @@ public class User {
     @Column(nullable = false, unique = true, length = 50)
     private String username;
 
+    @Email(message = "Valid email format is required")
     @Column(nullable = false, unique = true, length = 255)
     private String email;
 

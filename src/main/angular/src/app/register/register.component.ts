@@ -32,7 +32,7 @@ export class RegisterComponent implements OnInit {
   onSubmit() {
     let user: User = {
       username: this.username,
-      email: this.email,
+      email: this.email.value,
       password: this.password.value
     };
     this.userService.registerUser(user).subscribe(result => {
@@ -44,12 +44,22 @@ export class RegisterComponent implements OnInit {
     return this.registrationForm.get('username').value;
   }
 
-  get email(): string {
-    return this.registrationForm.get('email').value;
+  get email(): FormControl {
+    return this.registrationForm.get('email') as FormControl;
   }
 
   get password(): FormControl {
     return this.registrationForm.get('password1') as FormControl;
+  }
+
+  getEmailError(): string {
+    if (this.email.hasError('required')) {
+      return "Email is required";
+    }
+    if (this.email.hasError('email')) {
+      return "Not a valid email address";
+    }
+    return '';
   }
 
   getPasswordError(): string {
