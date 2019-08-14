@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
+import { ErrorDetails } from '../core/models/error-details';
 import { User } from '../core/models/user';
 import { UserService } from '../core/services/user.service';
 
@@ -14,6 +15,7 @@ export class RegisterComponent implements OnInit {
   readonly MIN_PASSWORD_LENGTH = 8;
   
   registrationForm: FormGroup;
+  error: ErrorDetails;
 
   constructor(
     private fb: FormBuilder,
@@ -27,6 +29,7 @@ export class RegisterComponent implements OnInit {
       password1: ['', [Validators.required, Validators.minLength(this.MIN_PASSWORD_LENGTH)]],
       password2: ['', Validators.required]
     });
+    this.error = { serverError: false, message: ''};
   }
 
   onSubmit() {
@@ -37,6 +40,11 @@ export class RegisterComponent implements OnInit {
     };
     this.userService.registerUser(user).subscribe(result => {
       console.log(`Done registering user, got result: ${result}`);
+      this.error.serverError = false;
+      this.error.message = '';
+    }, error => {
+      this.error.serverError = true;
+      this.error.message = "Registration could not be completed due to a server error";
     });
   }
 

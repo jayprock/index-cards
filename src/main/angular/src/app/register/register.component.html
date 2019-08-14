@@ -15,6 +15,7 @@
       <input matInput type="password" placeholder="Confirm Password" formControlName="password2" name="password2"
         required>
     </mat-form-field>
+    <p *ngIf="error.serverError" class="error-text">{{ error.message }}</p>
     <div class="button-container">
         <button mat-raised-button color="primary" class="big-button" (click)="onSubmit()">Submit</button>    
     </div>    
