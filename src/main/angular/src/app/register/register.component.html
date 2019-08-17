@@ -14,10 +14,11 @@
     <mat-form-field class="full-width">
       <input matInput type="password" placeholder="Confirm Password" formControlName="password2" name="password2"
         required>
+      <mat-error *ngIf="confirmPassword.invalid">{{ getPasswordConfirmationError() }}</mat-error>
     </mat-form-field>
     <p *ngIf="error.serverError" class="error-text">{{ error.message }}</p>
     <div class="button-container">
-        <button mat-raised-button color="primary" class="big-button" (click)="onSubmit()">Submit</button>    
-    </div>    
+      <button mat-raised-button color="primary" class="big-button" (click)="onSubmit()">Submit</button>
+    </div>
   </form>
 </idx-form-panel>
