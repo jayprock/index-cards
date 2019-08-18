@@ -36,4 +36,8 @@ public class UserService {
             passwordPolicy.assertCompliance(rawTextPassword);
         }
     }
+
+    public boolean isUsernameAvailable(String username) {
+        return !userRepo.findOptionalByUsername(username).isPresent();
+    }
 }
