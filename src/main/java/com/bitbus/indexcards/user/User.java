@@ -6,6 +6,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -20,6 +22,8 @@ public class User {
     @Column(name = "user_id")
     private long id;
 
+    @Size(min = 3, max = 50, message = "Username length must be 3-50 characters")
+    @Pattern(regexp = "[a-zA-Z0-9]*$")
     @Column(nullable = false, unique = true, length = 50)
     private String username;
 

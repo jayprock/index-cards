@@ -1,4 +1,4 @@
-import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 
 import { ErrorDetails } from '../core/models/error-details';
@@ -12,6 +12,8 @@ import { UserService } from '../core/services/user.service';
 })
 export class RegisterComponent implements OnInit {
   
+  readonly USERNAME_MIN_LENGTH = 3;
+  readonly USERNAME_MAX_LENGTH = 50;
   readonly MIN_PASSWORD_LENGTH = 8;
   
   registrationForm: FormGroup;
@@ -24,7 +26,7 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit() {
     this.registrationForm = this.fb.group({
-      username: ['', Validators.required],
+      username: ['', [Validators.required, Validators.minLength(this.USERNAME_MIN_LENGTH), Validators.maxLength(this.USERNAME_MAX_LENGTH), Validators.pattern("[a-zA-Z0-9]*$")]],
       email: ['', [Validators.required, Validators.email]],
       password1: ['', [Validators.required, Validators.minLength(this.MIN_PASSWORD_LENGTH), (control) => this.validatePasswords(control, 'password1') ] ],
       password2: ['', [Validators.required, Validators.minLength(this.MIN_PASSWORD_LENGTH), (control) => this.validatePasswords(control, 'password2') ] ]
@@ -34,7 +36,7 @@ export class RegisterComponent implements OnInit {
 
   onSubmit() {
     let user: User = {
-      username: this.username,
+      username: this.username.value,
       email: this.email.value,
       password: this.password.value
     };
@@ -48,8 +50,8 @@ export class RegisterComponent implements OnInit {
     });
   }
 
-  get username(): string {
-    return this.registrationForm.get('username').value;
+  get username(): AbstractControl {
+    return this.registrationForm.get('username');
   }
 
   get email(): AbstractControl {
@@ -62,6 +64,22 @@ export class RegisterComponent implements OnInit {
 
   get confirmPassword(): AbstractControl {
     return this.registrationForm.get('password2');
+  }
+
+  getUsernameError(): string {
+    if (this.username.hasError('required')) {
+      return "Username is required";
+    }
+    if (this.username.hasError('minlength')) {
+      return `Username must have at least ${this.USERNAME_MIN_LENGTH} characters`;
+    }
+    if (this.username.hasError('maxlength')) {
+      return `Username cannot be longer than ${this.USERNAME_MAX_LENGTH} characters`;
+    }
+    if (this.username.hasError('pattern')) {
+      return "Invalid characters. Username must be alpha-numeric.";
+    }
+    return '';
   }
 
   getEmailError(): string {
