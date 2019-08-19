@@ -2,20 +2,20 @@
   <form [formGroup]="registrationForm" class="form-primary">
     <mat-form-field class="full-width">
       <input matInput placeholder="Username" formControlName="username" name="username" required>
-      <mat-error *ngIf="username.invalid">{{ getUsernameError() }}</mat-error>
+      <mat-error *ngIf="username.invalid" class="error">{{ getUsernameError() }}</mat-error>
     </mat-form-field>
     <mat-form-field class="full-width">
       <input matInput placeholder="Email" formControlName="email" name="email" required>
-      <mat-error *ngIf="email.invalid">{{ getEmailError() }}</mat-error>
+      <mat-error *ngIf="email.invalid" class="error">{{ getEmailError() }}</mat-error>
     </mat-form-field>
     <mat-form-field class="full-width">
       <input matInput type="password" placeholder="Password" formControlName="password1" name="password1" required>
-      <mat-error *ngIf="password.invalid">{{ getPasswordError() }}</mat-error>
+      <mat-error *ngIf="password.invalid" class="error">{{ getPasswordError() }}</mat-error>
     </mat-form-field>
     <mat-form-field class="full-width">
       <input matInput type="password" placeholder="Confirm Password" formControlName="password2" name="password2"
         required>
-      <mat-error *ngIf="confirmPassword.invalid">{{ getPasswordConfirmationError() }}</mat-error>
+      <mat-error *ngIf="confirmPassword.invalid" class="error">{{ getPasswordConfirmationError() }}</mat-error>
     </mat-form-field>
     <p *ngIf="error.serverError" class="error-text">{{ error.message }}</p>
     <div class="button-container">
