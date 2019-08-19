@@ -18,4 +18,8 @@ export class UserService {
     isUsernameAvailable(username: string): Observable<boolean> {
         return this.http.get<boolean>(`${REST_PATHS.users}/username/${username}`);
     }
+
+    isEmailAvailable(email: string): Observable<boolean> {
+        return this.http.get<boolean>(`${REST_PATHS.users}/email/${email}`);
+    }
 }

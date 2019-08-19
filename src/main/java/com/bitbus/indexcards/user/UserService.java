@@ -40,4 +40,8 @@ public class UserService {
     public boolean isUsernameAvailable(String username) {
         return !userRepo.findOptionalByUsername(username).isPresent();
     }
+
+    public boolean isEmailAvailable(String email) {
+        return !userRepo.findOptionalByEmail(email).isPresent();
+    }
 }

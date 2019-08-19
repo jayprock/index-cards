@@ -28,11 +28,19 @@ public class UserController {
         return user;
     }
 
-    @GetMapping(path = "username/{username}")
+    @GetMapping("username/{username}")
     boolean isUsernameAvailable(@PathVariable("username") String username) {
         log.debug("Checking if username {} exists", username);
         boolean usernameAvailable = userService.isUsernameAvailable(username);
         log.debug("Username {} is available: {}", username, usernameAvailable);
         return usernameAvailable;
+    }
+
+    @GetMapping("email/{email}")
+    boolean isEmailAvailable(@PathVariable("email") String email) {
+        log.debug("Checking if email {} is available", email);
+        boolean emailAvailable = userService.isEmailAvailable(email);
+        log.debug("Email {} is available: {}", emailAvailable);
+        return emailAvailable;
     }
 }

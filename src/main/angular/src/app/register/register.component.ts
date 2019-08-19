@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { debounceTime, distinctUntilChanged, first, map, switchMap } from 'rxjs/operators';
 
 import { ErrorDetails } from '../core/models/error-details';
+import { Observable } from 'rxjs';
 import { User } from '../core/models/user';
 import { UserService } from '../core/services/user.service';
 
@@ -27,10 +28,26 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit() {
     this.registrationForm = this.fb.group({
-      username: ['', [Validators.required, Validators.minLength(this.USERNAME_MIN_LENGTH), Validators.maxLength(this.USERNAME_MAX_LENGTH), Validators.pattern("[a-zA-Z0-9]*$")], this.usernameNotTakenValidator()],
-      email: ['', [Validators.required, Validators.email]],
-      password1: ['', [Validators.required, Validators.minLength(this.MIN_PASSWORD_LENGTH), (control) => this.validatePasswords(control, 'password1') ] ],
-      password2: ['', [Validators.required, Validators.minLength(this.MIN_PASSWORD_LENGTH), (control) => this.validatePasswords(control, 'password2') ] ]
+      username: ['', [
+          Validators.required, 
+          Validators.minLength(this.USERNAME_MIN_LENGTH), 
+          Validators.maxLength(this.USERNAME_MAX_LENGTH), 
+          Validators.pattern("[a-zA-Z0-9]*$")
+        ],  this.usernameNotTakenValidator()],
+      email: ['', [
+        Validators.required, 
+        Validators.email
+      ], this.emailNotTakenValidator()],
+      password1: ['', [
+        Validators.required, 
+        Validators.minLength(this.MIN_PASSWORD_LENGTH), 
+        (control) => this.validatePasswords(control, 'password1') 
+      ] ],
+      password2: ['', [
+        Validators.required, 
+        Validators.minLength(this.MIN_PASSWORD_LENGTH), 
+        (control) => this.validatePasswords(control, 'password2') 
+      ] ]
     });
     this.error = { serverError: false, message: ''};
   }
@@ -93,6 +110,9 @@ export class RegisterComponent implements OnInit {
     if (this.email.hasError('email')) {
       return "Not a valid email address";
     }
+    if (this.email.hasError('emailTaken')) {
+      return "Email already registered. Log in instead?"
+    }
     return '';
   }
 
@@ -117,21 +137,23 @@ export class RegisterComponent implements OnInit {
     return '';
   }
 
-  validateUsernameAvailability(control: AbstractControl) {
-    return this.userService.isUsernameAvailable(control.value).pipe(
-      map(response => response ? null : { 'usernameTaken': true})
-    );
+  usernameNotTakenValidator(): AsyncValidatorFn {
+    return this.notTakenValidator(value => this.userService.isUsernameAvailable(value), 'usernameTaken');
   }
 
-  usernameNotTakenValidator(): AsyncValidatorFn {
+  emailNotTakenValidator(): AsyncValidatorFn {
+    return this.notTakenValidator(value => this.userService.isEmailAvailable(value), 'emailTaken');
+  }
+
+  private notTakenValidator(check: (value: string) => Observable<boolean>, errorName: string): AsyncValidatorFn {
     return (control: AbstractControl) => control.valueChanges
       .pipe(
         debounceTime(500),
         distinctUntilChanged(),
-        switchMap(value => this.userService.isUsernameAvailable(value)),
-        map((result: boolean) => (result ? null : { 'usernameTaken': true})),
+        switchMap(value => check(value)),
+        map((result: boolean) => (result ? null : { [errorName] : true})),
         first()
-      );
+      )
   }
 
   validatePasswords(control: AbstractControl, name: string) {
