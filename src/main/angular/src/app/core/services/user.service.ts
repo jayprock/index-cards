@@ -14,4 +14,8 @@ export class UserService {
     registerUser(user: User): Observable<User> {
         return this.http.post<User>(REST_PATHS.users, user);
     }
+
+    isUsernameAvailable(username: string): Observable<boolean> {
+        return this.http.get<boolean>(`${REST_PATHS.users}/username/${username}`);
+    }
 }

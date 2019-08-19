@@ -1,5 +1,6 @@
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, AsyncValidatorFn, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
+import { debounceTime, distinctUntilChanged, first, map, switchMap } from 'rxjs/operators';
 
 import { ErrorDetails } from '../core/models/error-details';
 import { User } from '../core/models/user';
@@ -26,7 +27,7 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit() {
     this.registrationForm = this.fb.group({
-      username: ['', [Validators.required, Validators.minLength(this.USERNAME_MIN_LENGTH), Validators.maxLength(this.USERNAME_MAX_LENGTH), Validators.pattern("[a-zA-Z0-9]*$")]],
+      username: ['', [Validators.required, Validators.minLength(this.USERNAME_MIN_LENGTH), Validators.maxLength(this.USERNAME_MAX_LENGTH), Validators.pattern("[a-zA-Z0-9]*$")], this.usernameNotTakenValidator()],
       email: ['', [Validators.required, Validators.email]],
       password1: ['', [Validators.required, Validators.minLength(this.MIN_PASSWORD_LENGTH), (control) => this.validatePasswords(control, 'password1') ] ],
       password2: ['', [Validators.required, Validators.minLength(this.MIN_PASSWORD_LENGTH), (control) => this.validatePasswords(control, 'password2') ] ]
@@ -79,6 +80,9 @@ export class RegisterComponent implements OnInit {
     if (this.username.hasError('pattern')) {
       return "Invalid characters. Username must be alpha-numeric.";
     }
+    if (this.username.hasError('usernameTaken')) {
+      return "Username is not available";
+    }
     return '';
   }
 
@@ -111,6 +115,23 @@ export class RegisterComponent implements OnInit {
       return "The passwords do not match";
     }
     return '';
+  }
+
+  validateUsernameAvailability(control: AbstractControl) {
+    return this.userService.isUsernameAvailable(control.value).pipe(
+      map(response => response ? null : { 'usernameTaken': true})
+    );
+  }
+
+  usernameNotTakenValidator(): AsyncValidatorFn {
+    return (control: AbstractControl) => control.valueChanges
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged(),
+        switchMap(value => this.userService.isUsernameAvailable(value)),
+        map((result: boolean) => (result ? null : { 'usernameTaken': true})),
+        first()
+      );
   }
 
   validatePasswords(control: AbstractControl, name: string) {
