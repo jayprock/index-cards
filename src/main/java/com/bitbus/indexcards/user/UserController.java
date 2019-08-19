@@ -1,9 +1,8 @@
 package com.bitbus.indexcards.user;
 
-import javax.websocket.server.PathParam;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,7 +29,7 @@ public class UserController {
     }
 
     @GetMapping(path = "username/{username}")
-    boolean isUsernameAvailable(@PathParam("username") String username) {
+    boolean isUsernameAvailable(@PathVariable("username") String username) {
         log.debug("Checking if username {} exists", username);
         boolean usernameAvailable = userService.isUsernameAvailable(username);
         log.debug("Username {} is available: {}", username, usernameAvailable);
