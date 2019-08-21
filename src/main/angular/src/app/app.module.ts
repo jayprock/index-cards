@@ -6,6 +6,7 @@ import { CoreModule } from './core/core.module';
 import { CreateModule } from './create/create.module';
 import { HomeModule } from './home/home.module';
 import { NgModule } from '@angular/core';
+import { RegisterModule } from './register/register.module';
 import { SearchModule } from './search/search.module';
 import { StudyGuideModule } from './study-guide/study-guide.module';
 
@@ -21,7 +22,8 @@ import { StudyGuideModule } from './study-guide/study-guide.module';
     HomeModule,
     SearchModule,
     CreateModule,
-    StudyGuideModule,
+    RegisterModule,
+    StudyGuideModule, // must be last
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,11 +1,10 @@
-<mat-card class="card-container">
-    <h1 class="center-text">Find Study Guide</h1>
-    <form #searchForm="ngForm" class="form-primary">
+<idx-form-panel [formHeader]="'Find Study Guide'">
+    <form [formGroup]="searchForm" class="form-primary">
         <div class="flex-container">
             <mat-form-field class="flex-grow">
-                <input matInput placeholder="Name or Category" name="search" [(ngModel)]="searchParam" required>
+                <input matInput placeholder="Name or Category" name="search" formControlName="searchParam" required>
             </mat-form-field>
-            <button mat-raised-button color="primary" (click)="onSearch()">Search</button> 
+            <button mat-raised-button color="primary" (click)="onSearch()">Search</button>
         </div>
         <div *ngIf="searchExecuted">
             <h2>Results for "{{ lastExecutedSearchParam }}"</h2>
@@ -18,4 +17,4 @@
             <ng-template #noResults>No results found.</ng-template>
         </div>
     </form>
-</mat-card>
+</idx-form-panel>
