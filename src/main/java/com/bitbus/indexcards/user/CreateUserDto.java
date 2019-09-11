@@ -1,8 +1,10 @@
 package com.bitbus.indexcards.user;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class CreateUserDto {
 
     private String username;
