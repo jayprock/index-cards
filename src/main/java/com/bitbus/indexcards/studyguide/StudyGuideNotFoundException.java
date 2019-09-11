@@ -13,8 +13,8 @@ public class StudyGuideNotFoundException extends RuntimeException implements Has
     }
 
     @Override
-    public int getErrorCode() {
-        return HttpStatus.NOT_FOUND.value();
+    public HttpStatus getErrorCode() {
+        return HttpStatus.NOT_FOUND;
     }
 
 }
