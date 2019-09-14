@@ -12,6 +12,7 @@ import { UserService } from '../core/services/user.service';
 export class LoginComponent implements OnInit {
 
   loginForm: FormGroup;
+  authenticationError = false;
 
   constructor(
     private fb: FormBuilder,
@@ -32,9 +33,9 @@ export class LoginComponent implements OnInit {
         password: this.loginForm.get('password').value
       }).subscribe(result => {
         let user: User = result;
-        console.log(`Logged in user ${user.id}`)
+        this.authenticationError = false;
       }, error => {
-        console.log("Username of password invalid")
+        this.authenticationError = true;
       });
     } else {
       this.loginForm.updateValueAndValidity();
