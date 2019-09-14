@@ -1,4 +1,4 @@
-package session;
+package com.bitbus.indexcards.session;
 
 import org.springframework.http.HttpStatus;
 

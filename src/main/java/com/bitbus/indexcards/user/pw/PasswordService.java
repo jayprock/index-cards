@@ -7,6 +7,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.bitbus.indexcards.session.AuthenticationException;
+
 @Service
 public class PasswordService {
 
@@ -24,4 +26,10 @@ public class PasswordService {
     public String encodePassword(String rawTextPassword) {
         return PASSWORD_ENCODER.encode(rawTextPassword);
     }
+
+    public boolean isPasswordCorrect(String rawTextPassword, String encodedPassword) throws AuthenticationException {
+        return PASSWORD_ENCODER.matches(rawTextPassword, encodedPassword);
+    }
+
+
 }
