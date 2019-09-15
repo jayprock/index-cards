@@ -13,8 +13,8 @@ public class PasswordPolicyException extends Exception implements HasSafeErrorMe
     }
 
     @Override
-    public int getErrorCode() {
-        return HttpStatus.BAD_REQUEST.value();
+    public HttpStatus getErrorCode() {
+        return HttpStatus.BAD_REQUEST;
     }
 
 }

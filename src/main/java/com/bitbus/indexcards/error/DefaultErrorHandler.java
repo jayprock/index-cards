@@ -22,7 +22,7 @@ public class DefaultErrorHandler extends ResponseEntityExceptionHandler {
 
     private HttpStatus getHttpStatus(Throwable ex) {
         if (ex instanceof HasErrorCode) {
-            return HttpStatus.valueOf(((HasErrorCode) ex).getErrorCode());
+            return ((HasErrorCode) ex).getErrorCode();
         }
         return HttpStatus.INTERNAL_SERVER_ERROR;
     }
