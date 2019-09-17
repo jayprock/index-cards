@@ -33,11 +33,7 @@ export class ForgotPasswordComponent implements OnInit {
         .subscribe(result => {
           this.submitted = true;
         }, error => {
-          console.log("Made it here")
-          this.error = {
-            serverError: true,
-            message: ''
-          };
+          this.error = { serverError: true, message: 'No account exists for this email!'};
           this.errorResponse = error;
         });
     } else {
