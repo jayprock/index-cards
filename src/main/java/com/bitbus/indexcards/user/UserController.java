@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,5 +43,13 @@ public class UserController {
         boolean emailAvailable = userService.isEmailAvailable(email);
         log.debug("Email {} is available: {}", emailAvailable);
         return emailAvailable;
+    }
+
+    @PutMapping("password")
+    void handleForgotPassword(@RequestBody String email) throws EmailDoesNotExistException {
+        log.debug("Handling forgot password for email {}", email);
+        if (userService.isEmailAvailable(email)) {
+            throw new EmailDoesNotExistException();
+        }
     }
 }

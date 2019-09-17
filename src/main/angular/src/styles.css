@@ -39,3 +39,7 @@
     width: 140px;
     font-size: 18px;
 }
+
+.link {
+    text-decoration: none;
+}

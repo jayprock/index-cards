@@ -27,4 +27,8 @@ export class UserService {
     login(userLogin: UserLogin): Observable<User> {
         return this.http.post<User>(REST_PATHS.sessions, userLogin);
     }
+
+    resetPassword(email: string): Observable<any> {
+        return this.http.put<any>(`${REST_PATHS.users}/password`, email);
+    }
 }
