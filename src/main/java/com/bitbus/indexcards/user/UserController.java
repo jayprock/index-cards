@@ -1,15 +1,20 @@
 package com.bitbus.indexcards.user;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bitbus.indexcards.user.pw.PasswordPolicyException;
+import com.bitbus.indexcards.util.UrlUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,10 +51,10 @@ public class UserController {
     }
 
     @PutMapping("password")
-    void handleForgotPassword(@RequestBody String email) throws EmailDoesNotExistException {
+    @ResponseStatus(value = HttpStatus.ACCEPTED)
+    void handleForgotPassword(@RequestBody String email, HttpServletRequest request) throws EmailDoesNotExistException {
         log.debug("Handling forgot password for email {}", email);
-        if (userService.isEmailAvailable(email)) {
-            throw new EmailDoesNotExistException();
-        }
+        userService.sendPasswordResetEmail(email, UrlUtil.getBaseUrl(request));
+        log.debug("Initiated password reset email for {}", email);
     }
 }
