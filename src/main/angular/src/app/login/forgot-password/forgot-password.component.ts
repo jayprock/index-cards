@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { ErrorDetails } from 'src/app/core/models/error-details';
+import { Router } from '@angular/router';
 import { UserService } from '../../core/services/user.service';
 
 @Component({
@@ -14,11 +15,11 @@ export class ForgotPasswordComponent implements OnInit {
   forgotPasswordForm: FormGroup;
   submitted = false;
   error: ErrorDetails = null;
-  errorResponse = null;
 
   constructor(
     private fb: FormBuilder,
-    private userService: UserService
+    private userService: UserService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -32,11 +33,12 @@ export class ForgotPasswordComponent implements OnInit {
       this.userService.resetPassword(this.forgotPasswordForm.get('email').value)
         .subscribe(result => {
           this.submitted = true;
+          this.router.navigateByUrl('/password-reset-email');
         }, error => {
           this.error = { serverError: true, message: 'No account exists for this email!'};
-          this.errorResponse = error;
         });
     } else {
+      this.error = null;
       this.forgotPasswordForm.updateValueAndValidity();
     }
   }
