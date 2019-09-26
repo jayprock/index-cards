@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+
+import { MESSAGE_KEYS } from '../../core/services/message-keys';
+import { MessageConsumerService } from '../../core/services/message-consumer.service';
 
 @Component({
   selector: 'idx-password-reset-email',
@@ -7,9 +10,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PasswordResetEmailComponent implements OnInit {
 
-  constructor() { }
+  email: string;
+
+  constructor(
+    private messageService: MessageConsumerService
+  ) { }
 
   ngOnInit() {
+    this.email = this.messageService.consumeMessage(MESSAGE_KEYS.email);
   }
 
 }
