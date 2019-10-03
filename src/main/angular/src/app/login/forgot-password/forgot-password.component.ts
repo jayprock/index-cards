@@ -33,7 +33,7 @@ export class ForgotPasswordComponent implements OnInit {
 
   onSubmit() {
     if (this.forgotPasswordForm.valid) {
-      this.userService.resetPassword(this.email)
+      this.userService.forgotPassword(this.email)
         .subscribe(result => {
           this.messageService.postMessage(MESSAGE_KEYS.email, this.email);
           this.router.navigateByUrl('/password-reset-email');

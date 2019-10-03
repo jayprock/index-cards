@@ -2,10 +2,10 @@ package com.bitbus.indexcards.user;
 
 import org.springframework.http.HttpStatus;
 
-import com.bitbus.indexcards.error.HasErrorCode;
+import com.bitbus.indexcards.error.ErrorCodeException;
 
 @SuppressWarnings("serial")
-public class UserNotFoundException extends Exception implements HasErrorCode {
+public class UserNotFoundException extends ErrorCodeException {
 
     @Override
     public HttpStatus getErrorCode() {

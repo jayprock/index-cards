@@ -31,7 +31,7 @@ public class SessionController {
         try {
             User user = userService.findByLogin(loginDto.getLogin());
             log.debug("User {} exists, checking password", user.getUsername());
-            boolean passwordCorrect = passwordService.isPasswordCorrect(loginDto.getPassword(), user.getPassword());
+            boolean passwordCorrect = passwordService.isMatchesHash(loginDto.getPassword(), user.getPassword());
             log.debug("User {} password match: {}", user.getUsername(), passwordCorrect);
             if (!passwordCorrect) {
                 throw new AuthenticationException();

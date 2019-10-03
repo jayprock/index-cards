@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bitbus.indexcards.card.IndexCard;
 import com.bitbus.indexcards.card.IndexCardService;
+import com.bitbus.indexcards.error.ErrorCodeException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,7 +31,7 @@ public class StudyGuideController {
 
     @GetMapping("{studyGuideId}")
     public StudyGuideDto findStudyGuide(@PathVariable long studyGuideId,
-            @RequestParam(name = "category", required = false) String category) {
+            @RequestParam(name = "category", required = false) String category) throws ErrorCodeException {
         log.info("Looking up study-guide with ID {}", studyGuideId);
         StudyGuide studyGuide = studyGuideService.findById(studyGuideId);
         log.info("Found the {} study guide", studyGuide.getName());
