@@ -17,6 +17,12 @@ import lombok.Data;
 @Data
 public class User {
 
+    public User() {}
+
+    public User(long id) {
+        this.id = id;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")

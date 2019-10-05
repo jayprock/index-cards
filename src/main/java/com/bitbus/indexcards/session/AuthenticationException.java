@@ -2,11 +2,11 @@ package com.bitbus.indexcards.session;
 
 import org.springframework.http.HttpStatus;
 
-import com.bitbus.indexcards.error.HasErrorCode;
+import com.bitbus.indexcards.error.ErrorCodeException;
 import com.bitbus.indexcards.error.HasSafeErrorMessage;
 
 @SuppressWarnings("serial")
-public class AuthenticationException extends Exception implements HasSafeErrorMessage, HasErrorCode {
+public class AuthenticationException extends ErrorCodeException implements HasSafeErrorMessage {
 
     public AuthenticationException() {}
 

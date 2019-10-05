@@ -18,8 +18,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 @Entity
-@Table(name = "study_guide_tag",
-        indexes = {@Index(name = "study_guide_tag_name_idx", columnList = "name", unique = true)})
+@Table(indexes = {@Index(name = "idx_study_guide_tag_name", columnList = "name", unique = true)})
 @Data
 public class StudyGuideTag {
 

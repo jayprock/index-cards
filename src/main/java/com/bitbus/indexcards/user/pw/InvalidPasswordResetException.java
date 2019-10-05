@@ -6,10 +6,10 @@ import com.bitbus.indexcards.error.ErrorCodeException;
 import com.bitbus.indexcards.error.HasSafeErrorMessage;
 
 @SuppressWarnings("serial")
-public class PasswordPolicyException extends ErrorCodeException implements HasSafeErrorMessage {
+public class InvalidPasswordResetException extends ErrorCodeException implements HasSafeErrorMessage {
 
-    public PasswordPolicyException(String policyName) {
-        super("The provided password violates the password policy: " + policyName);
+    public InvalidPasswordResetException(String safeErrorMessage) {
+        super(safeErrorMessage);
     }
 
     @Override

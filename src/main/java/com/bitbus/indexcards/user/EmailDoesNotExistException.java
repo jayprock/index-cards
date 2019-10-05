@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import com.bitbus.indexcards.error.ErrorCodeException;
 
 @SuppressWarnings("serial")
-public class UserNotFoundException extends ErrorCodeException {
+public class EmailDoesNotExistException extends ErrorCodeException {
 
     @Override
     public HttpStatus getErrorCode() {
