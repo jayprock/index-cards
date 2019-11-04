@@ -14,3 +14,4 @@ insert into MAP_STUDY_GUIDE_TAG values (2, 2);
 insert into MAP_STUDY_GUIDE_TAG values (3, 3);
 insert into MAP_STUDY_GUIDE_TAG values (4, 4);
 insert into MAP_STUDY_GUIDE_TAG values (4, 5);
+insert into MAP_STUDY_GUIDE_TAG values (5, 6);
