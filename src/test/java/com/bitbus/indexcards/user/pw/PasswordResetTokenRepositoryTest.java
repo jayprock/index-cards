@@ -13,7 +13,7 @@ import com.bitbus.indexcards.user.User;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-@Sql("./password-reset-token-data.sql")
+@Sql("password-reset-token-data.sql")
 public class PasswordResetTokenRepositoryTest {
 
     @Autowired
