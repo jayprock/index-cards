@@ -65,7 +65,8 @@ public class StudyGuideControllerTest {
         mvc.perform(
                 post("/api/studyguides")
                 .content(studyGuideDtoAsJson())
-                .contentType(MediaType.APPLICATION_JSON))//
+                .contentType(MediaType.APPLICATION_JSON)//
+                .with(csrf()))
             .andExpect(status().isUnauthorized());
     }
     

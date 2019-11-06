@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -74,10 +75,12 @@ public class UserControllerTest {
     
     @Test
     public void testHandlePasswordReset_204() throws Exception {
+        // TODO - test in live application - see if CSRF is generated
         mvc.perform(
                 post("/api/users/password-reset")
                 .content(toJson(dummyPasswordResetDto()))
-                .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(csrf()))
             .andExpect(status().isNoContent());
     }
     
@@ -88,7 +91,8 @@ public class UserControllerTest {
         mvc.perform(
                 post("/api/users/password-reset")
                 .content(toJson(dummyPasswordResetDto()))
-                .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(csrf()))
             .andExpect(status().isBadRequest());
     }
     

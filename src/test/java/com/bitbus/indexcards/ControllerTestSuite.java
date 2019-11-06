@@ -16,6 +16,6 @@ import com.bitbus.indexcards.user.UserControllerTest;
         StudyGuideTagControllerTest.class, //
         UserControllerTest.class //
 })
-public class ControllerTests {
+public class ControllerTestSuite {
 
 }
