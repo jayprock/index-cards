@@ -12,7 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-@Sql("./studyguide-data.sql")
+@Sql("studyguide-data.sql")
 public class StudyGuideRepositoryTest {
 
     @Autowired

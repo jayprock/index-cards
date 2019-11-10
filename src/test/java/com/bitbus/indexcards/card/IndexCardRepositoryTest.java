@@ -12,7 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-@Sql("./index-card-data.sql")
+@Sql("index-card-data.sql")
 public class IndexCardRepositoryTest {
 
     @Autowired
