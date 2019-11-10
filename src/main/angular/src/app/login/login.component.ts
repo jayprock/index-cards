@@ -32,7 +32,6 @@ export class LoginComponent implements OnInit {
         login: this.loginForm.get('login').value,
         password: this.loginForm.get('password').value
       }).subscribe(result => {
-        let user: User = result;
         this.authenticationError = false;
       }, error => {
         this.authenticationError = true;

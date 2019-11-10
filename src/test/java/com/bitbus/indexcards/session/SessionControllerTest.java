@@ -1,6 +1,6 @@
 package com.bitbus.indexcards.session;
 
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -11,34 +11,34 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.bitbus.indexcards.user.User;
-import com.bitbus.indexcards.user.UserService;
-import com.bitbus.indexcards.user.pw.PasswordService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(SessionController.class)
 public class SessionControllerTest {
 
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
     @Autowired
     private MockMvc mvc;
 
     @MockBean
-    private UserService userService;
+    private AuthenticationManager authManager;
     @MockBean
-    private PasswordService pwService;
-
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private AuthenticationProvider authProvider;
 
     //@formatter:off
     @Test
     public void testLogin_valid_200() throws Exception {
-        when(userService.findByLogin(anyString())).thenReturn(dummyUser());
-        when(pwService.isMatchesHash(anyString(), anyString())).thenReturn(true);
-        
+        when(authManager.authenticate(any(Authentication.class))).thenReturn(new UsernamePasswordAuthenticationToken("test", null));
         mvc.perform(
                 post("/api/session")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -48,9 +48,7 @@ public class SessionControllerTest {
     
     @Test
     public void testLogin_invalidPassword_401() throws Exception {
-        when(userService.findByLogin(anyString())).thenReturn(dummyUser());
-        when(pwService.isMatchesHash(anyString(), anyString())).thenReturn(false);
-        
+        when(authManager.authenticate(any(Authentication.class))).thenThrow(new BadCredentialsException("test"));       
         mvc.perform(
                 post("/api/session")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -65,12 +63,4 @@ public class SessionControllerTest {
         return dto;
     }
     
-    private User dummyUser() {
-        User user = new User(1);
-        user.setEmail("myemail@gmail.com");
-        user.setUsername("myusername");
-        user.setPassword("password");
-        return user;
-    }
-
 }

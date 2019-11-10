@@ -1,15 +1,16 @@
 package com.bitbus.indexcards.session;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.bitbus.indexcards.user.User;
-import com.bitbus.indexcards.user.UserNotFoundException;
-import com.bitbus.indexcards.user.UserService;
-import com.bitbus.indexcards.user.pw.PasswordService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,25 +20,21 @@ import lombok.extern.slf4j.Slf4j;
 public class SessionController {
 
     @Autowired
-    private UserService userService;
-    @Autowired
-    private PasswordService passwordService;
+    private AuthenticationManager authManager;
 
 
     @PostMapping
-    User login(@RequestBody LoginDto loginDto) throws AuthenticationException {
+    Authentication login(HttpServletRequest request, @RequestBody LoginDto loginDto) throws AuthenticationException {
         log.debug("Attempting login on user {}", loginDto.getLogin());
         throttleLogin(loginDto.getLogin());
         try {
-            User user = userService.findByLogin(loginDto.getLogin());
-            log.debug("User {} exists, checking password", user.getUsername());
-            boolean passwordCorrect = passwordService.isMatchesHash(loginDto.getPassword(), user.getPassword());
-            log.debug("User {} password match: {}", user.getUsername(), passwordCorrect);
-            if (!passwordCorrect) {
-                throw new AuthenticationException();
-            }
-            return user;
-        } catch (UserNotFoundException e) {
+            Authentication authentication = authManager
+                    .authenticate(new UsernamePasswordAuthenticationToken(loginDto.getLogin(), loginDto.getPassword()));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            log.debug("Login successful for user {}", loginDto.getLogin());
+            return authentication;
+        } catch (org.springframework.security.core.AuthenticationException ex) {
+            SecurityContextHolder.clearContext();
             throw new AuthenticationException();
         }
     }
