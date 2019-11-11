@@ -6,6 +6,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { CoreModule } from './core/core.module';
 import { CreateModule } from './create/create.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 import { GlobalErrorHandler } from './core/interceptors/global-error-handler';
 import { HomeModule } from './home/home.module';
 import { LoginModule } from './login/login.module';
@@ -27,6 +28,7 @@ import { StudyGuideModule } from './study-guide/study-guide.module';
     CreateModule,
     RegisterModule,
     LoginModule,
+    DashboardModule, 
     StudyGuideModule, // must be last based on routing path
   ],
   providers: [
