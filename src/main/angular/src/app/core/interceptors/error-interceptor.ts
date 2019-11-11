@@ -25,7 +25,7 @@ export class ErrorInterceptor implements HttpInterceptor {
       catchError((err: HttpErrorResponse) => {
         if (err.status == 401) {
           console.error("TODO - handle unauthorized access");
-          return EMPTY;
+          return throwError(err);
         } else {
           return throwError(err);
         }

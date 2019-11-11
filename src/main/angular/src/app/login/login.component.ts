@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
+import { Router } from '@angular/router';
 import { User } from '../core/models/user';
 import { UserService } from '../core/services/user.service';
 
@@ -16,7 +17,8 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private userService: UserService
+    private userService: UserService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -33,6 +35,7 @@ export class LoginComponent implements OnInit {
         password: this.loginForm.get('password').value
       }).subscribe(result => {
         this.authenticationError = false;
+        this.router.navigateByUrl('/dashboard');
       }, error => {
         this.authenticationError = true;
       });
