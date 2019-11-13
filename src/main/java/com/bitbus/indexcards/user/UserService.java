@@ -6,10 +6,15 @@ import java.util.UUID;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.bitbus.indexcards.email.EmailService;
 import com.bitbus.indexcards.error.Exceptions;
+import com.bitbus.indexcards.session.AuthenticationException;
 import com.bitbus.indexcards.user.pw.InvalidPasswordResetException;
 import com.bitbus.indexcards.user.pw.PasswordPolicyException;
 import com.bitbus.indexcards.user.pw.PasswordService;
@@ -20,12 +25,12 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepo;
-
     @Autowired
     private PasswordService passwordService;
-
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private AuthenticationManager authManager;
 
 
     public User create(CreateUserDto dto) throws PasswordPolicyException {
@@ -35,6 +40,17 @@ public class UserService {
         user.setEmail(dto.getEmail());
         user.setPassword(passwordService.encode(dto.getPassword()));
         return userRepo.save(user);
+    }
+
+    public Authentication loginUser(String login, String rawPassword) throws AuthenticationException {
+        try {
+            Authentication authentication =
+                    authManager.authenticate(new UsernamePasswordAuthenticationToken(login, rawPassword));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            return authentication;
+        } catch (org.springframework.security.core.AuthenticationException ex) {
+            throw new AuthenticationException();
+        }
     }
 
     public boolean isUsernameAvailable(String username) {

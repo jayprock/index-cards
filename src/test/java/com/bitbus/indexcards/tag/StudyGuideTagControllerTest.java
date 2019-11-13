@@ -8,26 +8,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.ArrayList;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 
-//@formatter:off
-@RunWith(SpringRunner.class)
+import com.bitbus.indexcards.BaseSecuredControllerTest;
+
 @WebMvcTest(StudyGuideTagController.class)
-public class StudyGuideTagControllerTest {
+public class StudyGuideTagControllerTest extends BaseSecuredControllerTest {
 
-    @Autowired
-    private MockMvc mvc;
-    
     @MockBean
     private StudyGuideTagService studyGuideTagService;
-    
+
     // Accessible to the public
+    //@formatter:off
     @Test
     public void testSearchByName() throws Exception {
         when(studyGuideTagService.searchByName(anyString())).thenReturn(new ArrayList<>());

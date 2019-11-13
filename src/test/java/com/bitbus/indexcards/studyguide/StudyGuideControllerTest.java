@@ -14,15 +14,12 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 
+import com.bitbus.indexcards.BaseSecuredControllerTest;
 import com.bitbus.indexcards.card.FlashCardDto;
 import com.bitbus.indexcards.card.IndexCard;
 import com.bitbus.indexcards.card.IndexCardService;
@@ -30,12 +27,8 @@ import com.bitbus.indexcards.tag.StudyGuideTag;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 //@formatter:off
-@RunWith(SpringRunner.class)
 @WebMvcTest(StudyGuideController.class)
-public class StudyGuideControllerTest {
-
-    @Autowired
-    private MockMvc mvc;
+public class StudyGuideControllerTest extends BaseSecuredControllerTest {
 
     @MockBean
     private StudyGuideService studyGuideService;

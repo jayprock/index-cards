@@ -35,6 +35,11 @@ public class UserController {
         log.info("Attempting to create user with username {}", userDto.getUsername());
         User user = userService.create(userDto);
         log.info("User {} successfully created with user ID {}", userDto.getUsername(), user.getId());
+
+        log.info("Performing automatic login for new user {}", userDto.getUsername());
+        userService.loginUser(user.getUsername(), userDto.getPassword());
+        log.info("User {} was successfully logged in", user.getUsername());
+
         return user;
     }
 

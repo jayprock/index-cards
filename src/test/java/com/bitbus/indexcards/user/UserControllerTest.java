@@ -12,26 +12,20 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
+import com.bitbus.indexcards.BaseSecuredControllerTest;
 import com.bitbus.indexcards.user.pw.InvalidPasswordResetException;
 import com.bitbus.indexcards.user.pw.PasswordResetDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 // UserController is publicly accessible
 // @formatter:off
-@RunWith(SpringRunner.class)
 @WebMvcTest(UserController.class)
-public class UserControllerTest {
-
-    @Autowired
-    private MockMvc mvc;
+public class UserControllerTest extends BaseSecuredControllerTest {
 
     @MockBean
     private UserService userService;
@@ -41,6 +35,7 @@ public class UserControllerTest {
     @Test
     public void testCreateUser_200() throws Exception {
         when(userService.create(any(CreateUserDto.class))).thenReturn(dummyUser());
+        when(userService.loginUser(anyString(), anyString())).thenReturn(new UsernamePasswordAuthenticationToken("test", null));
         mvc.perform(
                 post("/api/users")
                 .content(toJson(dummyCreateUserDto()))

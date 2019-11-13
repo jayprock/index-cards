@@ -4,6 +4,7 @@ import { debounceTime, distinctUntilChanged, first, map, switchMap } from 'rxjs/
 
 import { ErrorDetails } from '../core/models/error-details';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 import { User } from '../core/models/user';
 import { UserService } from '../core/services/user.service';
 
@@ -23,7 +24,8 @@ export class RegisterComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private userService: UserService
+    private userService: UserService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -59,9 +61,9 @@ export class RegisterComponent implements OnInit {
       password: this.password.value
     };
     this.userService.registerUser(user).subscribe(result => {
-      console.log(`Done registering user, got result: ${result}`);
       this.error.serverError = false;
       this.error.message = '';
+      this.router.navigateByUrl('/dashboard');
     }, error => {
       this.error.serverError = true;
       this.error.message = "Registration could not be completed due to a server error";
