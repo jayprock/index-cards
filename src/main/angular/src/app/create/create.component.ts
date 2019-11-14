@@ -1,4 +1,5 @@
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { COMMA, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
@@ -8,7 +9,7 @@ import { ErrorDetails } from '../core/models/error-details';
 import { IndexCard } from '../core/models/index-card';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { Observable } from 'rxjs';
-import { Router } from '@angular/router';
+import { Principal } from '../core/models/principal';
 import { StudyGuide } from '../core/models/study-guide';
 import { StudyGuideCategoryService } from '../core/services/study-guide-category.service';
 import { StudyGuideService } from '../core/services/study-guide.service';
@@ -32,13 +33,20 @@ export class CreateComponent implements OnInit {
   @ViewChild("auto") autoComplete: MatAutocomplete;
 
   constructor(
-    private studyGuideService: StudyGuideService, 
-    private categoryService: StudyGuideCategoryService,
+    private fb: FormBuilder,
+    private route: ActivatedRoute,
     private router: Router, 
-    private fb: FormBuilder
+    private studyGuideService: StudyGuideService, 
+    private categoryService: StudyGuideCategoryService
     ) { }
     
     ngOnInit() {
+      this.route.data
+        .subscribe((data: { principal: Principal }) => {
+          if (data.principal == null) {
+            window.alert("TODO - Design authorized users only notification");
+          }
+        });
       this.studyGuideForm = this.fb.group({
         studyGuideName: ['', Validators.required],
         categories: [this.categoryNames, [this.categoriesValidator()]],

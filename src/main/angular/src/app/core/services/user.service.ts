@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PasswordReset } from '../models/password-reset';
+import { Principal } from '../models/principal';
 import { REST_PATHS } from 'src/app/rest-paths';
 import { User } from '../models/user';
 import { UserLogin } from '../models/user-login';
@@ -12,6 +13,10 @@ import { UserLogin } from '../models/user-login';
 export class UserService {
 
     constructor(private http: HttpClient) { }
+
+    getPrincipal(): Observable<Principal> {
+        return this.http.get<Principal>(REST_PATHS.sessions);
+    }
 
     registerUser(user: User): Observable<User> {
         return this.http.post<User>(REST_PATHS.users, user);
