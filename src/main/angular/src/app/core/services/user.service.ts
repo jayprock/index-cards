@@ -34,6 +34,10 @@ export class UserService {
         return this.http.post<User>(REST_PATHS.sessions, userLogin);
     }
 
+    logout(): Observable<any> {
+        return this.http.delete<any>(REST_PATHS.sessions);
+    }
+
     forgotPassword(email: string): Observable<any> {
         return this.http.put<any>(`${REST_PATHS.users}/password-forgot`, email);
     }
