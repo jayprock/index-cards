@@ -15,11 +15,11 @@ import { StudyGuideCategoryService } from '../core/services/study-guide-category
 import { StudyGuideService } from '../core/services/study-guide.service';
 
 @Component({
-  selector: 'idx-create',
-  templateUrl: './create.component.html',
-  styleUrls: ['./create.component.css']
+  selector: 'idx-study-guide-form',
+  templateUrl: './study-guide-form.component.html',
+  styleUrls: ['./study-guide-form.component.css']
 })
-export class CreateComponent implements OnInit {
+export class StudyGuideFormComponent implements OnInit {
   
   studyGuideForm: FormGroup;
   error: ErrorDetails = { serverError: false, message: null};

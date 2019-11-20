@@ -5,11 +5,11 @@ import { AppRoutingModule } from './app-routing.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { CoreModule } from './core/core.module';
-import { CreateModule } from './create/create.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { GlobalErrorHandler } from './core/interceptors/global-error-handler';
 import { HomeModule } from './home/home.module';
 import { LoginModule } from './login/login.module';
+import { ManageModule } from './manage/manage.module';
 import { RegisterModule } from './register/register.module';
 import { SearchModule } from './search/search.module';
 import { StudyGuideModule } from './study-guide/study-guide.module';
@@ -25,7 +25,7 @@ import { StudyGuideModule } from './study-guide/study-guide.module';
     CoreModule,
     HomeModule,
     SearchModule,
-    CreateModule,
+    ManageModule,
     RegisterModule,
     LoginModule,
     DashboardModule, 
