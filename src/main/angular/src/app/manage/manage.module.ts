@@ -4,9 +4,10 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
 import { StudyGuideFormComponent } from './study-guide-form.component';
+import { CreateStudyGuideComponent } from './create-study-guide/create-study-guide.component';
 
 @NgModule({
-  declarations: [StudyGuideFormComponent],
+  declarations: [StudyGuideFormComponent, CreateStudyGuideComponent],
   imports: [
     CommonModule,
     ManageRoutingModule,

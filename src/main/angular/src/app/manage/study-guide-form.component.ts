@@ -34,19 +34,12 @@ export class StudyGuideFormComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private route: ActivatedRoute,
     private router: Router, 
     private studyGuideService: StudyGuideService, 
     private categoryService: StudyGuideCategoryService
     ) { }
     
     ngOnInit() {
-      this.route.data
-        .subscribe((data: { principal: Principal }) => {
-          if (data.principal == null) {
-            window.alert("TODO - Design authorized users only notification");
-          }
-        });
       this.studyGuideForm = this.fb.group({
         studyGuideName: ['', Validators.required],
         categories: [this.categoryNames, [this.categoriesValidator()]],
