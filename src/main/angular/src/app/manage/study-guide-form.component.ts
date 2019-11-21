@@ -1,7 +1,6 @@
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
 import { COMMA, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { debounceTime, filter, startWith, switchMap } from 'rxjs/operators';
 
@@ -9,10 +8,8 @@ import { ErrorDetails } from '../core/models/error-details';
 import { IndexCard } from '../core/models/index-card';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { Observable } from 'rxjs';
-import { Principal } from '../core/models/principal';
 import { StudyGuide } from '../core/models/study-guide';
 import { StudyGuideCategoryService } from '../core/services/study-guide-category.service';
-import { StudyGuideService } from '../core/services/study-guide.service';
 
 @Component({
   selector: 'idx-study-guide-form',
@@ -20,6 +17,8 @@ import { StudyGuideService } from '../core/services/study-guide.service';
   styleUrls: ['./study-guide-form.component.css']
 })
 export class StudyGuideFormComponent implements OnInit {
+
+  @Output() submitStudyGuide = new EventEmitter<StudyGuide>();
   
   studyGuideForm: FormGroup;
   error: ErrorDetails = { serverError: false, message: null};
@@ -34,8 +33,6 @@ export class StudyGuideFormComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private router: Router, 
-    private studyGuideService: StudyGuideService, 
     private categoryService: StudyGuideCategoryService
     ) { }
     
@@ -63,13 +60,8 @@ export class StudyGuideFormComponent implements OnInit {
 
   onSubmit() {
     if (this.studyGuideForm.valid) {
-      this.studyGuideService.createStudyGuide(this.constructStudyGuide()).subscribe(result => {
-        this.error = {};
-        this.router.navigateByUrl("/" + result.studyGuideId);
-      }, error => {
-        this.error.serverError = true;
-        this.error.message = "The request could not be completed due to a server error.";
-      });
+      this.error = {};
+      this.submitStudyGuide.emit(this.constructStudyGuide());
     } else {
       this.error.serverError = false;
       this.error.message = "Please enter all required fields and try again."
