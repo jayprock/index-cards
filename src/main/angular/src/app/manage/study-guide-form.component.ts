@@ -1,10 +1,9 @@
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { COMMA, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
-import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { debounceTime, filter, startWith, switchMap } from 'rxjs/operators';
 
-import { ErrorDetails } from '../core/models/error-details';
 import { IndexCard } from '../core/models/index-card';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { Observable } from 'rxjs';
@@ -18,10 +17,11 @@ import { StudyGuideCategoryService } from '../core/services/study-guide-category
 })
 export class StudyGuideFormComponent implements OnInit {
 
+  @Input() serverError: string;
   @Output() submitStudyGuide = new EventEmitter<StudyGuide>();
   
   studyGuideForm: FormGroup;
-  error: ErrorDetails = { serverError: false, message: null};
+  validationError: string;
 
   readonly separatorKeysCodes: number[] = [ SPACE, COMMA, SEMICOLON ];
   categoryInputCtrl = new FormControl();
@@ -60,11 +60,10 @@ export class StudyGuideFormComponent implements OnInit {
 
   onSubmit() {
     if (this.studyGuideForm.valid) {
-      this.error = {};
+      this.validationError = null;
       this.submitStudyGuide.emit(this.constructStudyGuide());
     } else {
-      this.error.serverError = false;
-      this.error.message = "Please enter all required fields and try again."
+      this.validationError = "Please enter all required fields and try again."
     }
   }
 
@@ -153,6 +152,19 @@ export class StudyGuideFormComponent implements OnInit {
         return error;
       }
     }
+  }
+
+  isErrorPresent(): boolean {
+    return this.validationError != null || this.serverError != null;
+  }
+
+  getErrorMessage(): string {
+    if (this.validationError != null) {
+      return this.validationError;
+    } else {
+      return this.serverError;
+    }
+
   }
 
 }

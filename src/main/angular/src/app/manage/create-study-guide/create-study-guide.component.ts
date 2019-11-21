@@ -1,7 +1,6 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 
-import { ErrorDetails } from '../../core/models/error-details';
 import { Principal } from '../../core/models/principal';
 import { StudyGuide } from '../../core/models/study-guide';
 import { StudyGuideService } from '../../core/services/study-guide.service';
@@ -13,7 +12,7 @@ import { StudyGuideService } from '../../core/services/study-guide.service';
 })
 export class CreateStudyGuideComponent implements OnInit {
 
-  error: ErrorDetails = { serverError: false, message: null };
+  serverError: string;
 
   constructor(
     private route: ActivatedRoute,
@@ -31,13 +30,13 @@ export class CreateStudyGuideComponent implements OnInit {
   }
 
   onSubmit(studyGuide: StudyGuide) {
+    this.serverError = null;
     this.studyGuideService.createStudyGuide(studyGuide)
       .subscribe(
         result => {
           this.router.navigateByUrl("/" + result.studyGuideId);
       }, error => {
-        this.error.serverError = true;
-        this.error.message = "The request could not be completed due to a server error";
+        this.serverError = "The request could not be completed due to a server error";
       });
   }
 
