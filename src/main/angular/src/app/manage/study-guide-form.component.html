@@ -6,7 +6,7 @@
         </mat-form-field>
         <mat-form-field class="full-width">
             <mat-chip-list #categoriesList formControlName="categories" required>
-                <mat-chip *ngFor="let category of categoryNames; index as i;" [removable]="true" [selectable]="false" (removed)="removeCategory(i)"  >
+                <mat-chip *ngFor="let category of studyGuide.categories; index as i;" [removable]="true" [selectable]="false" (removed)="removeCategory(i)"  >
                     {{ category }}
                     <mat-icon matChipRemove *ngIf="true">cancel</mat-icon>
                 </mat-chip>

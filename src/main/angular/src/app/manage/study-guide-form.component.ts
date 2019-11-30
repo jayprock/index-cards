@@ -17,6 +17,12 @@ import { StudyGuideCategoryService } from '../core/services/study-guide-category
 })
 export class StudyGuideFormComponent implements OnInit {
 
+  @Input() studyGuide: StudyGuide = {
+    studyGuideName: '',
+    description: '',
+    categories: [],
+    flashCards: [{ front: '', back: ''}]
+  };
   @Input() serverError: string;
   @Output() submitStudyGuide = new EventEmitter<StudyGuide>();
   
@@ -25,7 +31,6 @@ export class StudyGuideFormComponent implements OnInit {
 
   readonly separatorKeysCodes: number[] = [ SPACE, COMMA, SEMICOLON ];
   categoryInputCtrl = new FormControl();
-  categoryNames = [];
   categoriesFound: Observable<string[]>;
 
   @ViewChild("categoryInputEl") categoryInputEl: ElementRef<HTMLInputElement>;
@@ -37,24 +42,30 @@ export class StudyGuideFormComponent implements OnInit {
     ) { }
     
     ngOnInit() {
+      // Initialize the Study Guide Form
       this.studyGuideForm = this.fb.group({
-        studyGuideName: ['', Validators.required],
-        categories: [this.categoryNames, [this.categoriesValidator()]],
-        description: [''],
-        flashCards: this.fb.array([
-          this.fb.group({
-            front: ['', Validators.required],
-            back: ['', Validators.required]
-          })
-        ])
+        studyGuideName: [this.studyGuide.studyGuideName, Validators.required],
+        categories: [this.studyGuide.categories, [this.categoriesValidator()]],
+        description: [this.studyGuide.description],
+        flashCards: this.fb.array([])
       });
+      // Initialize Flash Cards
+      this.studyGuide.flashCards.forEach(flashCard => {
+        this.flashCards.push(
+          this.fb.group({
+            front: [flashCard.front, Validators.required],
+            back: [flashCard.back, Validators.required]
+          })
+        );
+      });
+      // Search for categories when the input value changes
       this.categoriesFound = this.categoryInputCtrl.valueChanges
         .pipe(
           debounceTime(250),
           startWith(''),
           filter(value => value && value.length > 2),
-          filter(value => !this.categoryNames.includes(value.toLowerCase())),
-          switchMap(value => this.categoryService.search(value, this.categoryNames))
+          filter(value => !this.studyGuide.categories.includes(value.toLowerCase())),
+          switchMap(value => this.categoryService.search(value, this.studyGuide.categories))
         );
   }
 
@@ -81,15 +92,15 @@ export class StudyGuideFormComponent implements OnInit {
   }
 
   private addCategory(category: string) {
-    if (category && category.length > 0 && !this.categoryNames.includes(category.toLowerCase())) {
-      this.categoryNames.push(category.toLowerCase());
+    if (category && category.length > 0 && !this.studyGuide.categories.includes(category.toLowerCase())) {
+      this.studyGuide.categories.push(category.toLowerCase());
       this.studyGuideForm.controls['categories'].updateValueAndValidity();
     }
   }
 
   removeCategory(pos: number) {
-    if (this.categoryNames[pos]) {
-      this.categoryNames.splice(pos, 1);
+    if (this.studyGuide.categories[pos]) {
+      this.studyGuide.categories.splice(pos, 1);
       this.studyGuideForm.controls['categories'].updateValueAndValidity();
     }
   }
@@ -98,7 +109,6 @@ export class StudyGuideFormComponent implements OnInit {
     return this.studyGuideForm.get('flashCards') as FormArray;
   }
 
-  
   addFlashCard() {
     this.flashCards.push(this.fb.group({ front: '', back: ''}));
     let newFormGroup = this.flashCards.at(this.flashCards.length - 1) as FormGroup;
@@ -139,11 +149,11 @@ export class StudyGuideFormComponent implements OnInit {
 
   categoriesValidator(): ValidatorFn {
     return (control: AbstractControl): {[key: string]: any} | null => {
-      if (this.studyGuideForm && this.categoryNames.length < 1) {
+      if (this.studyGuideForm && this.studyGuide.categories.length < 1) {
         return {'invalidCategories': { value: 'At least 1 category is required'}};
       } else {
         let error = null;
-        for (let name of this.categoryNames) {
+        for (let name of this.studyGuide.categories) {
           if (!name.match('^[a-z][a-z0-9-]{1,}$')) {
             error = {'invalidCategories': { value: 'A category was detected that uses an invalid format'}};
             break;
