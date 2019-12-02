@@ -1,6 +1,5 @@
 package com.bitbus.indexcards.studyguide;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bitbus.indexcards.card.IndexCard;
-import com.bitbus.indexcards.card.IndexCardService;
 import com.bitbus.indexcards.error.ErrorCodeException;
 
 import lombok.extern.slf4j.Slf4j;
@@ -26,28 +23,13 @@ public class StudyGuideController {
     @Autowired
     private StudyGuideService studyGuideService;
 
-    @Autowired
-    private IndexCardService indexCardService;
-
     @GetMapping("{studyGuideId}")
-    public StudyGuideDto findStudyGuide(@PathVariable long studyGuideId,
-            @RequestParam(name = "category", required = false) String category) throws ErrorCodeException {
+    public StudyGuideDto findStudyGuide(@PathVariable long studyGuideId) throws ErrorCodeException {
         log.info("Looking up study-guide with ID {}", studyGuideId);
-        StudyGuide studyGuide = studyGuideService.findById(studyGuideId);
+        StudyGuide studyGuide = studyGuideService.findWithAllChildren(studyGuideId);
         log.info("Found the {} study guide", studyGuide.getName());
 
-        List<IndexCard> flashCards = new ArrayList<>();
-        if (category == null) {
-            log.info("Looking up flash cards for the study guide {}:{}", studyGuideId, studyGuide.getName());
-            flashCards = indexCardService.findByStudyGuideId(studyGuideId);
-        } else {
-            log.info("Looking up flash cards for the study guide {}:{} with category {}", studyGuideId,
-                    studyGuide.getName(), category);
-            flashCards = indexCardService.findByStudyGuideIdAndCategory(studyGuideId, category);
-        }
-        log.info("Found {} flash cards", flashCards.size());
-
-        return StudyGuideDto.get(studyGuide, flashCards);
+        return StudyGuideDto.get(studyGuide, studyGuide.getIndexCards(), studyGuide.getTags());
     }
 
     @PostMapping

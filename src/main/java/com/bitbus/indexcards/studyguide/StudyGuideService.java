@@ -22,9 +22,17 @@ public class StudyGuideService {
     private StudyGuideTagRepository tagRepo;
 
     @Transactional
-    public StudyGuide findById(long id) throws StudyGuideNotFoundException {
+    public StudyGuide find(long id) throws StudyGuideNotFoundException {
         Optional<StudyGuide> optStudyGuide = studyGuideRepo.findById(id);
         return optStudyGuide.orElseThrow(() -> new StudyGuideNotFoundException(id));
+    }
+
+    @Transactional
+    public StudyGuide findWithAllChildren(long id) throws StudyGuideNotFoundException {
+        StudyGuide studyGuide = find(id);
+        studyGuide.getTags().size();
+        studyGuide.getIndexCards().size();
+        return studyGuide;
     }
 
     @Transactional
