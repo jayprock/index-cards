@@ -90,7 +90,7 @@ public class UserService {
         String url = UrlUtil.appendToUrl(baseUrl, "password-reset", token);
         message.append(url);
         message.append("?id=");
-        message.append(user.getId());
+        message.append(user.getUserId());
         emailService.sendTextOnly(email, "Reset your password", message.toString());
     }
 

@@ -12,12 +12,14 @@ import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 import com.bitbus.indexcards.card.IndexCard;
 import com.bitbus.indexcards.tag.StudyGuideTag;
+import com.bitbus.indexcards.user.User;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -52,5 +54,10 @@ public class StudyGuide {
     @ToString.Exclude
     @Size(min = 1, message = "At least one study guide tag must be provided")
     private List<StudyGuideTag> tags;
+
+    @ManyToOne
+    @JoinColumn(name = "userId", nullable = false)
+    private User createdBy;
+
 
 }

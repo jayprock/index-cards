@@ -23,6 +23,8 @@ import com.bitbus.indexcards.BaseSecuredControllerTest;
 import com.bitbus.indexcards.card.FlashCardDto;
 import com.bitbus.indexcards.card.IndexCard;
 import com.bitbus.indexcards.tag.StudyGuideTag;
+import com.bitbus.indexcards.user.User;
+import com.bitbus.indexcards.user.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 //@formatter:off
@@ -31,6 +33,8 @@ public class StudyGuideControllerTest extends BaseSecuredControllerTest {
 
     @MockBean
     private StudyGuideService studyGuideService;
+    @MockBean
+    private UserService userService;
 
     @SuppressWarnings("unchecked")
     @WithMockUser("user")
@@ -63,6 +67,7 @@ public class StudyGuideControllerTest extends BaseSecuredControllerTest {
     @WithMockUser("user")
     @Test
     public void testCreateStudyGuide_valid_200() throws Exception {
+        when(userService.findByLogin(anyString())).thenReturn(new User(1));
         when(studyGuideService.create(any(StudyGuide.class), any(List.class))).thenReturn(dummyStudyGuide());
         mvc.perform(
                 post("/api/studyguides")

@@ -1,6 +1,6 @@
 INSERT INTO `user` (`user_id`,`email`,`password`,`username`) VALUES (1,'test@gmail.com','$2a$10$MA98uYq4K5vmhp9.nPkPtudhQhE8Jj4mL5gNFOvZnXy7kndA5vzT2','test');
 
-insert into STUDY_GUIDE values(1, 'US Capitals', 'Capitals of the 50 states');
+insert into STUDY_GUIDE values(1, 'US Capitals', 'Capitals of the 50 states', 1);
 
 insert into STUDY_GUIDE_TAG values(1, 'geography');
 
