@@ -40,13 +40,13 @@ public class StudyGuide {
 
     private String description;
 
-    @OneToMany(mappedBy = "studyGuide", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "studyGuide", cascade = CascadeType.ALL, orphanRemoval = true)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @Size(min = 1, message = "A study guide must have at least 1 flash card")
     private List<IndexCard> indexCards;
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "map_study_guide_tag", joinColumns = @JoinColumn(name = "id"),
             inverseJoinColumns = @JoinColumn(name = "studyGuideTagId"),
             indexes = {@Index(name = "map_study_guide_tag_unq", columnList = "id, studyGuideTagId", unique = true)})

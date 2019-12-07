@@ -125,6 +125,7 @@ export class StudyGuideFormComponent implements OnInit {
 
   private constructStudyGuide(): StudyGuide {
     let studyGuide: StudyGuide = {
+      studyGuideId: this.studyGuide.studyGuideId,
       studyGuideName: this.studyGuideForm.get('studyGuideName').value,
       description: this.studyGuideForm.get('description').value,
       categories: this.studyGuideForm.get('categories').value,

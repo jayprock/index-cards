@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -47,7 +48,7 @@ public class StudyGuideController {
                 studyGuideDto.getStudyGuideName());
         StudyGuide studyGuide = studyGuideDto.toStudyGuide();
         studyGuide.setCreatedBy(createdBy);
-        studyGuideService.create(studyGuide, studyGuideDto.getCategories());
+        studyGuideService.save(studyGuide, studyGuideDto.getCategories());
         log.info("User {} created study guide {}:{} with {} flash cards", createdBy.getUserId(), studyGuide.getId(),
                 studyGuide.getName(), studyGuide.getIndexCards().size());
         return StudyGuideDto.get(studyGuide, studyGuide.getIndexCards());
@@ -62,5 +63,20 @@ public class StudyGuideController {
         return StudyGuideDto.get(studyGuides);
     }
 
+    @PutMapping
+    public StudyGuideDto updateStudyGuide(@RequestBody StudyGuideDto studyGuideDto, Principal principal)
+            throws UserNotFoundException, ErrorCodeException {
+        StudyGuide studyGuide = studyGuideDto.toStudyGuide();
+        User user = userService.findCreatedBy(studyGuide);
+        if (!principal.getName().equals(user.getUsername())) {
+            throw new StudyGuideEditNotAllowedException(studyGuide.getId(), principal.getName());
+        }
+        log.info("User {} is editing study guide with id {}", user.getUserId(), studyGuide.getId());
+        studyGuide.setCreatedBy(user);
+        studyGuideService.save(studyGuide, studyGuideDto.getCategories());
+        log.info("User {} modified study guide {}:{}. It now has {} flash cards", user.getUserId(), studyGuide.getId(),
+                studyGuide.getName(), studyGuide.getIndexCards().size());
+        return StudyGuideDto.get(studyGuide, studyGuide.getIndexCards());
+    }
 
 }

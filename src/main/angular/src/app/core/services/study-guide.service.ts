@@ -20,6 +20,10 @@ export class StudyGuideService {
     return this.http.post<StudyGuide>(`${REST_PATHS.studyGuides}`, studyGuide);
   }
 
+  updateStudyGuide(studyGuide: StudyGuide): Observable<StudyGuide> {
+    return this.http.put<StudyGuide>(`${REST_PATHS.studyGuides}`, studyGuide);
+  }
+
   searchStudyGuide(param: string): Observable<StudyGuide[]> {
     return this.http.get<StudyGuide[]>(`${REST_PATHS.studyGuides}?search=${param}`);
   }

@@ -2,6 +2,7 @@ package com.bitbus.indexcards.tag;
 
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -27,6 +28,7 @@ public class StudyGuideTag {
     private long studyGuideTagId;
 
     @Pattern(regexp = "^[a-z][a-z0-9-]*$")
+    @Column(nullable = false)
     private String name;
 
     @ManyToMany(mappedBy = "tags")

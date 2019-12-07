@@ -7,6 +7,7 @@ import org.junit.runners.Suite.SuiteClasses;
 import com.bitbus.indexcards.card.IndexCardRepositoryTest;
 import com.bitbus.indexcards.studyguide.StudyGuideRepositoryTest;
 import com.bitbus.indexcards.tag.StudyGuideTagRepositoryTest;
+import com.bitbus.indexcards.user.UserRepositoryTest;
 import com.bitbus.indexcards.user.pw.PasswordResetTokenRepositoryTest;
 
 @RunWith(Suite.class)
@@ -14,8 +15,8 @@ import com.bitbus.indexcards.user.pw.PasswordResetTokenRepositoryTest;
         StudyGuideRepositoryTest.class, //
         IndexCardRepositoryTest.class, //
         StudyGuideTagRepositoryTest.class, //
-        PasswordResetTokenRepositoryTest.class //
-})
+        PasswordResetTokenRepositoryTest.class, //
+        UserRepositoryTest.class})
 public class RepositoryTestSuite {
 
 }

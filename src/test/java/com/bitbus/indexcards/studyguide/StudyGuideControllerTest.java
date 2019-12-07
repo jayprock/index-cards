@@ -40,7 +40,7 @@ public class StudyGuideControllerTest extends BaseSecuredControllerTest {
     @WithMockUser("user")
     @Test
     public void testCreateStudyGuide_noCsrf_403() throws Exception {
-        when(studyGuideService.create(any(StudyGuide.class), any(List.class))).thenReturn(dummyStudyGuide());
+        when(studyGuideService.save(any(StudyGuide.class), any(List.class))).thenReturn(dummyStudyGuide());
         
         mvc.perform(
                 post("/api/studyguides")
@@ -52,7 +52,7 @@ public class StudyGuideControllerTest extends BaseSecuredControllerTest {
     @SuppressWarnings("unchecked")
     @Test
     public void testCreateStudyGuide_unauthorized_401() throws Exception {
-        when(studyGuideService.create(any(StudyGuide.class), any(List.class))).thenReturn(dummyStudyGuide());
+        when(studyGuideService.save(any(StudyGuide.class), any(List.class))).thenReturn(dummyStudyGuide());
         
         // Note: Removed the @WithMockUser annotation
         mvc.perform(
@@ -68,7 +68,7 @@ public class StudyGuideControllerTest extends BaseSecuredControllerTest {
     @Test
     public void testCreateStudyGuide_valid_200() throws Exception {
         when(userService.findByLogin(anyString())).thenReturn(new User(1));
-        when(studyGuideService.create(any(StudyGuide.class), any(List.class))).thenReturn(dummyStudyGuide());
+        when(studyGuideService.save(any(StudyGuide.class), any(List.class))).thenReturn(dummyStudyGuide());
         mvc.perform(
                 post("/api/studyguides")
                 .contentType(MediaType.APPLICATION_JSON)//

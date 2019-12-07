@@ -36,7 +36,13 @@ public class StudyGuideService {
     }
 
     @Transactional
-    public StudyGuide create(StudyGuide studyGuide, List<String> categories) {
+    public StudyGuide save(StudyGuide studyGuide, List<String> categories) {
+        List<StudyGuideTag> tags = toStudyGuideTags(categories);
+        studyGuide.setTags(tags);
+        return studyGuideRepo.save(studyGuide);
+    }
+
+    private List<StudyGuideTag> toStudyGuideTags(List<String> categories) {
         List<StudyGuideTag> tags = new ArrayList<>();
         for (String category : categories) {
             String lowerCaseCategory = category.toLowerCase();
@@ -48,9 +54,9 @@ public class StudyGuideService {
             });
             tags.add(tag);
         }
-        studyGuide.setTags(tags);
-        return studyGuideRepo.save(studyGuide);
+        return tags;
     }
+
 
     public List<StudyGuide> search(String searchParam) {
         return studyGuideRepo.search(searchParam);
