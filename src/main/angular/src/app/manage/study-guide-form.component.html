@@ -6,7 +6,7 @@
         </mat-form-field>
         <mat-form-field class="full-width">
             <mat-chip-list #categoriesList formControlName="categories" required>
-                <mat-chip *ngFor="let category of categoryNames; index as i;" [removable]="true" [selectable]="false" (removed)="removeCategory(i)"  >
+                <mat-chip *ngFor="let category of studyGuide.categories; index as i;" [removable]="true" [selectable]="false" (removed)="removeCategory(i)"  >
                     {{ category }}
                     <mat-icon matChipRemove *ngIf="true">cancel</mat-icon>
                 </mat-chip>
@@ -43,7 +43,7 @@
             </div>
             <button type="button" mat-fab color="accent" (click)="addFlashCard()" class="add-button">+</button>
         </div>
-        <p class="error-text" *ngIf="error.serverError || (error.message && !studyGuideForm.valid)">{{ error?.message }} </p>
+        <p class="error-text" *ngIf="isErrorPresent()">{{ getErrorMessage() }} </p>
         <div class="button-container">
             <button mat-raised-button color="primary" class="big-button" (click)="onSubmit()">Submit</button>    
         </div>

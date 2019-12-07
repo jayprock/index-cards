@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.bitbus.indexcards.email.EmailService;
 import com.bitbus.indexcards.error.Exceptions;
 import com.bitbus.indexcards.session.AuthenticationException;
+import com.bitbus.indexcards.studyguide.StudyGuide;
 import com.bitbus.indexcards.user.pw.InvalidPasswordResetException;
 import com.bitbus.indexcards.user.pw.PasswordPolicyException;
 import com.bitbus.indexcards.user.pw.PasswordService;
@@ -90,7 +91,7 @@ public class UserService {
         String url = UrlUtil.appendToUrl(baseUrl, "password-reset", token);
         message.append(url);
         message.append("?id=");
-        message.append(user.getId());
+        message.append(user.getUserId());
         emailService.sendTextOnly(email, "Reset your password", message.toString());
     }
 
@@ -101,6 +102,10 @@ public class UserService {
         passwordService.assertPasswordResetTokenValid(user, token);
         String newPasswordHash = passwordService.encode(newPassword);
         user.setPassword(newPasswordHash);
+    }
+
+    public User findCreatedBy(StudyGuide studyGuide) {
+        return userRepo.findCreatedBy(studyGuide);
     }
 
 }

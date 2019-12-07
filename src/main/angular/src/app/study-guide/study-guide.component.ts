@@ -1,7 +1,7 @@
+import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { animate, keyframes, state, style, transition, trigger } from '@angular/animations';
 
-import { ActivatedRoute } from '@angular/router';
 import { StudyGuide } from '../core/models/study-guide';
 import { StudyGuideService } from '../core/services/study-guide.service';
 
@@ -146,12 +146,17 @@ export class StudyGuideComponent implements OnInit {
   studyGuide: StudyGuide = {studyGuideName: '', description: '', categories: [], flashCards: []};
   cardNum = 0;
   cardState = 'front';
+  studyGuideId = '';
 
-  constructor(private route: ActivatedRoute, private studyGuideService: StudyGuideService) { }
+  constructor(
+    private route: ActivatedRoute, 
+    private router: Router,
+    private studyGuideService: StudyGuideService
+  ) { }
 
   ngOnInit() {
-    const studyGuideId = this.route.snapshot.paramMap.get('studyGuideId');
-    this.studyGuideService.findStudyGuide(studyGuideId).subscribe(studyGuide => {
+    this.studyGuideId = this.route.snapshot.paramMap.get('studyGuideId');
+    this.studyGuideService.findStudyGuide(this.studyGuideId).subscribe(studyGuide => {
       this.studyGuide = studyGuide;
     });
   }
@@ -186,5 +191,8 @@ export class StudyGuideComponent implements OnInit {
     }, 200);
   }
 
+  edit() {
+    this.router.navigateByUrl('/edit/' + this.studyGuideId);
+  }
 }
   

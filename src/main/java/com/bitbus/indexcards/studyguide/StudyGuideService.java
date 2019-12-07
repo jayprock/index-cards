@@ -22,13 +22,27 @@ public class StudyGuideService {
     private StudyGuideTagRepository tagRepo;
 
     @Transactional
-    public StudyGuide findById(long id) throws StudyGuideNotFoundException {
+    public StudyGuide find(long id) throws StudyGuideNotFoundException {
         Optional<StudyGuide> optStudyGuide = studyGuideRepo.findById(id);
         return optStudyGuide.orElseThrow(() -> new StudyGuideNotFoundException(id));
     }
 
     @Transactional
-    public StudyGuide create(StudyGuide studyGuide, List<String> categories) {
+    public StudyGuide findWithAllChildren(long id) throws StudyGuideNotFoundException {
+        StudyGuide studyGuide = find(id);
+        studyGuide.getTags().size();
+        studyGuide.getIndexCards().size();
+        return studyGuide;
+    }
+
+    @Transactional
+    public StudyGuide save(StudyGuide studyGuide, List<String> categories) {
+        List<StudyGuideTag> tags = toStudyGuideTags(categories);
+        studyGuide.setTags(tags);
+        return studyGuideRepo.save(studyGuide);
+    }
+
+    private List<StudyGuideTag> toStudyGuideTags(List<String> categories) {
         List<StudyGuideTag> tags = new ArrayList<>();
         for (String category : categories) {
             String lowerCaseCategory = category.toLowerCase();
@@ -40,9 +54,9 @@ public class StudyGuideService {
             });
             tags.add(tag);
         }
-        studyGuide.setTags(tags);
-        return studyGuideRepo.save(studyGuide);
+        return tags;
     }
+
 
     public List<StudyGuide> search(String searchParam) {
         return studyGuideRepo.search(searchParam);

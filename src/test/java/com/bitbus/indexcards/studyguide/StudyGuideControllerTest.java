@@ -22,8 +22,9 @@ import org.springframework.security.test.context.support.WithMockUser;
 import com.bitbus.indexcards.BaseSecuredControllerTest;
 import com.bitbus.indexcards.card.FlashCardDto;
 import com.bitbus.indexcards.card.IndexCard;
-import com.bitbus.indexcards.card.IndexCardService;
 import com.bitbus.indexcards.tag.StudyGuideTag;
+import com.bitbus.indexcards.user.User;
+import com.bitbus.indexcards.user.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 //@formatter:off
@@ -33,14 +34,13 @@ public class StudyGuideControllerTest extends BaseSecuredControllerTest {
     @MockBean
     private StudyGuideService studyGuideService;
     @MockBean
-    private IndexCardService indexCardService;
-
+    private UserService userService;
 
     @SuppressWarnings("unchecked")
     @WithMockUser("user")
     @Test
     public void testCreateStudyGuide_noCsrf_403() throws Exception {
-        when(studyGuideService.create(any(StudyGuide.class), any(List.class))).thenReturn(dummyStudyGuide());
+        when(studyGuideService.save(any(StudyGuide.class), any(List.class))).thenReturn(dummyStudyGuide());
         
         mvc.perform(
                 post("/api/studyguides")
@@ -52,7 +52,7 @@ public class StudyGuideControllerTest extends BaseSecuredControllerTest {
     @SuppressWarnings("unchecked")
     @Test
     public void testCreateStudyGuide_unauthorized_401() throws Exception {
-        when(studyGuideService.create(any(StudyGuide.class), any(List.class))).thenReturn(dummyStudyGuide());
+        when(studyGuideService.save(any(StudyGuide.class), any(List.class))).thenReturn(dummyStudyGuide());
         
         // Note: Removed the @WithMockUser annotation
         mvc.perform(
@@ -67,7 +67,8 @@ public class StudyGuideControllerTest extends BaseSecuredControllerTest {
     @WithMockUser("user")
     @Test
     public void testCreateStudyGuide_valid_200() throws Exception {
-        when(studyGuideService.create(any(StudyGuide.class), any(List.class))).thenReturn(dummyStudyGuide());
+        when(userService.findByLogin(anyString())).thenReturn(new User(1));
+        when(studyGuideService.save(any(StudyGuide.class), any(List.class))).thenReturn(dummyStudyGuide());
         mvc.perform(
                 post("/api/studyguides")
                 .contentType(MediaType.APPLICATION_JSON)//
@@ -79,8 +80,7 @@ public class StudyGuideControllerTest extends BaseSecuredControllerTest {
     // Accessble to the public
     @Test
     public void testFindStudyGuide() throws Exception {
-        when(studyGuideService.findById(anyLong())).thenReturn(dummyStudyGuide());
-        when(indexCardService.findByStudyGuideId(anyLong())).thenReturn(new ArrayList<>());
+        when(studyGuideService.findWithAllChildren(anyLong())).thenReturn(dummyStudyGuide());
         mvc.perform(
                 get("/api/studyguides/1")
                 .contentType(MediaType.APPLICATION_JSON))

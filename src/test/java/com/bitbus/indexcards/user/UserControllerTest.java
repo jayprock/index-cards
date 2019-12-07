@@ -102,7 +102,7 @@ public class UserControllerTest extends BaseSecuredControllerTest {
     private User dummyUser() {
         User user = new User();
         user.setUsername("unitTest");
-        user.setId(1);
+        user.setUserId(1);
         user.setEmail("unitTest@test.com");
         return user;
     }
