@@ -14,7 +14,7 @@ import { UserService } from '../core/services/user.service';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
-  
+
   readonly USERNAME_MIN_LENGTH = 3;
   readonly USERNAME_MAX_LENGTH = 50;
   readonly MIN_PASSWORD_LENGTH = 8;
@@ -52,6 +52,10 @@ export class RegisterComponent implements OnInit {
       ] ]
     });
     this.error = { serverError: false, message: ''};
+  }
+
+  onRecaptchaReady(response) {
+    console.log(response);
   }
 
   onSubmit() {
