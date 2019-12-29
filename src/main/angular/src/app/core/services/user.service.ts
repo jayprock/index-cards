@@ -6,6 +6,7 @@ import { Principal } from '../models/principal';
 import { REST_PATHS } from 'src/app/rest-paths';
 import { User } from '../models/user';
 import { UserLogin } from '../models/user-login';
+import { UserRegistration } from '../models/user-registration';
 
 @Injectable({
     providedIn: 'root'
@@ -18,8 +19,8 @@ export class UserService {
         return this.http.get<Principal>(REST_PATHS.sessions);
     }
 
-    registerUser(user: User): Observable<User> {
-        return this.http.post<User>(REST_PATHS.users, user);
+    registerUser(userRegistration: UserRegistration): Observable<any> {
+        return this.http.post<any>(REST_PATHS.users, userRegistration);
     }
 
     isUsernameAvailable(username: string): Observable<boolean> {

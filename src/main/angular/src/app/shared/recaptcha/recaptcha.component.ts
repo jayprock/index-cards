@@ -7,7 +7,7 @@ import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '
 })
 export class RecaptchaComponent implements OnInit {
 
-  @Output() ready = new EventEmitter();
+  @Output() ready = new EventEmitter<string>();
 
   @ViewChild('recaptcha') recaptchaElement: ElementRef;
 

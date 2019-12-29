@@ -20,6 +20,7 @@ export class RegisterComponent implements OnInit {
   readonly MIN_PASSWORD_LENGTH = 8;
   
   registrationForm: FormGroup;
+  recaptchaResponse: string;
   error: ErrorDetails;
 
   constructor(
@@ -54,7 +55,8 @@ export class RegisterComponent implements OnInit {
     this.error = { serverError: false, message: ''};
   }
 
-  onRecaptchaReady(response) {
+  onRecaptchaReady(response: string) {
+    this.recaptchaResponse = response;
     console.log(response);
   }
 
@@ -64,14 +66,20 @@ export class RegisterComponent implements OnInit {
       email: this.email.value,
       password: this.password.value
     };
-    this.userService.registerUser(user).subscribe(result => {
-      this.error.serverError = false;
-      this.error.message = '';
-      this.router.navigateByUrl('/dashboard');
-    }, error => {
-      this.error.serverError = true;
-      this.error.message = "Registration could not be completed due to a server error";
-    });
+    this.userService.registerUser({ user: user, recaptchaResponse: this.recaptchaResponse })
+        .subscribe(result => {
+          if (result.recaptchaApiResponse.success == true) {
+            this.error.serverError = false;
+            this.error.message = '';
+            this.router.navigateByUrl('/dashboard');
+          } else {
+            this.error.serverError = true;
+            this.error.message = "Recaptcha verification failed";
+          }
+        }, error => {
+          this.error.serverError = true;
+          this.error.message = "Registration could not be completed due to a server error";
+        });
   }
 
   get username(): AbstractControl {
