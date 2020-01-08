@@ -1,20 +1,30 @@
-import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'idx-recaptcha',
   templateUrl: './recaptcha.component.html',
   styleUrls: ['./recaptcha.component.css']
 })
-export class RecaptchaComponent implements OnInit {
+export class RecaptchaComponent implements OnInit, OnChanges {
 
+  @Input() hasError = false;
   @Output() ready = new EventEmitter<string>();
 
   @ViewChild('recaptcha') recaptchaElement: ElementRef;
+
+  private responseCaptured = false;
 
   constructor() { }
 
   ngOnInit() {
     this.addRecaptchaScript();
+  }
+
+  ngOnChanges() {
+    if (this.hasError && this.responseCaptured) {
+      this.responseCaptured = false;
+      window['grecaptcha'].reset();
+    }
   }
 
   addRecaptchaScript() {
@@ -37,6 +47,7 @@ export class RecaptchaComponent implements OnInit {
     window['grecaptcha'].render(this.recaptchaElement.nativeElement, {
       'sitekey' : '6Le2_8YUAAAAAJQm7w7UBt5ZmuPVMj8MUUIe8pf2',
       'callback': (response) => {
+          this.responseCaptured = true;
           this.ready.emit(response);
       }
     });

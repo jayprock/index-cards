@@ -52,34 +52,42 @@ export class RegisterComponent implements OnInit {
         (control) => this.validatePasswords(control, 'password2') 
       ] ]
     });
-    this.error = { serverError: false, message: ''};
+    this.clearErrors();
   }
 
   onRecaptchaReady(response: string) {
     this.recaptchaResponse = response;
-    console.log(response);
   }
 
   onSubmit() {
-    let user: User = {
-      username: this.username.value,
-      email: this.email.value,
-      password: this.password.value
-    };
-    this.userService.registerUser({ user: user, recaptchaResponse: this.recaptchaResponse })
-        .subscribe(result => {
-          if (result.recaptchaApiResponse.success == true) {
-            this.error.serverError = false;
-            this.error.message = '';
-            this.router.navigateByUrl('/dashboard');
-          } else {
+    if (this.registrationForm.valid && this.recaptchaResponse) {
+      let user: User = {
+        username: this.username.value,
+        email: this.email.value,
+        password: this.password.value
+      };
+      this.userService.registerUser({ user: user, recaptchaResponse: this.recaptchaResponse })
+          .subscribe(result => {
+            if (result.recaptchaApiResponse.success == true) {
+              this.clearErrors();
+              this.router.navigateByUrl('/dashboard');
+            } else {
+              this.error.recaptchaError = true;
+              this.error.serverError = true;
+              this.error.message = "Recaptcha verification failed";
+            }
+          }, error => {
             this.error.serverError = true;
-            this.error.message = "Recaptcha verification failed";
-          }
-        }, error => {
-          this.error.serverError = true;
-          this.error.message = "Registration could not be completed due to a server error";
-        });
+            this.error.recaptchaError = false;
+            this.error.message = "Registration could not be completed due to a server error";
+          });
+    } else if (this.registrationForm.valid) {
+      this.error.recaptchaError = true;
+    } else {
+      this.registrationForm.updateValueAndValidity();
+      this.error.recaptchaError = !this.recaptchaResponse;
+    }
+
   }
 
   get username(): AbstractControl {
@@ -168,6 +176,10 @@ export class RegisterComponent implements OnInit {
         map((result: boolean) => (result ? null : { [errorName] : true})),
         first()
       )
+  }
+
+  private clearErrors(): void {
+    this.error = { serverError: false, message: '', recaptchaError: false};
   }
 
   validatePasswords(control: AbstractControl, name: string) {
