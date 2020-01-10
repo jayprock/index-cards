@@ -16,8 +16,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bitbus.indexcards.error.ErrorCodeException;
+import com.bitbus.indexcards.user.pw.ForgotPasswordRequest;
+import com.bitbus.indexcards.user.pw.ForgotPasswordResponse;
 import com.bitbus.indexcards.user.pw.InvalidPasswordResetException;
 import com.bitbus.indexcards.user.pw.PasswordResetDto;
+import com.bitbus.indexcards.user.recaptcha.RecaptchaApiResponse;
+import com.bitbus.indexcards.user.recaptcha.RecaptchaService;
 import com.bitbus.indexcards.util.UrlUtil;
 
 import lombok.extern.slf4j.Slf4j;
@@ -29,18 +33,36 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private RecaptchaService recaptchaService;
 
     @PostMapping
-    User create(@RequestBody CreateUserDto userDto) throws ErrorCodeException {
-        log.info("Attempting to create user with username {}", userDto.getUsername());
-        User user = userService.create(userDto);
-        log.info("User {} successfully created with user ID {}", userDto.getUsername(), user.getUserId());
+    UserRegistrationResponse register(@RequestBody UserRegistrationDto registrationDto, HttpServletRequest request)
+            throws ErrorCodeException {
+        log.info("Processing request to register user with username {}", registrationDto.getUser().getUsername());
 
-        log.info("Performing automatic login for new user {}", userDto.getUsername());
-        userService.loginUser(user.getUsername(), userDto.getPassword());
-        log.info("User {} was successfully logged in", user.getUsername());
+        log.debug("Validating recaptcha first...");
+        RecaptchaApiResponse recaptchaApiResponse =
+                recaptchaService.getRecaptchaApiResponse(registrationDto.getRecaptchaResponse());
+        if (recaptchaApiResponse.isSuccess()) {
+            log.debug("Recaptcha is valid");
+            CreateUserDto userDto = registrationDto.getUser();
+            log.debug("Attempting to create user {}", userDto.getUsername());
+            User user = userService.create(userDto);
+            log.debug("User {} successfully created with user ID {}", userDto.getUsername(), user.getUserId());
 
-        return user;
+            log.debug("Performing automatic login for new user {}", user.getUsername());
+            userService.loginUser(user.getUsername(), userDto.getPassword());
+            log.debug("No authentication exception, therefore user {} was successfully logged in", user.getUsername());
+
+        } else {
+            log.warn("Received invalid recaptcha response from {}; response had the following error codes: {}",
+                    request.getRemoteAddr(), recaptchaApiResponse.getErrorCodes());
+        }
+
+        UserRegistrationResponse response = new UserRegistrationResponse();
+        response.setRecaptchaApiResponse(recaptchaApiResponse);
+        return response;
     }
 
     @GetMapping("username/{username}")
@@ -61,10 +83,26 @@ public class UserController {
 
     @PutMapping("password-forgot")
     @ResponseStatus(value = HttpStatus.ACCEPTED)
-    void handleForgotPassword(@RequestBody String email, HttpServletRequest request) throws ErrorCodeException {
-        log.debug("Handling forgot password for email {}", email);
-        userService.sendPasswordResetEmail(email, UrlUtil.getBaseUrl(request));
-        log.debug("Initiated password reset email for {}", email);
+    ForgotPasswordResponse handleForgotPassword(@RequestBody ForgotPasswordRequest forgotPasswordReq,
+            HttpServletRequest request) throws ErrorCodeException {
+        log.debug("Handling forgot password for email {}", forgotPasswordReq.getEmail());
+        log.debug("Validating forgot password recaptcha.");
+        RecaptchaApiResponse recaptchaApiResponse =
+                recaptchaService.getRecaptchaApiResponse(forgotPasswordReq.getRecaptchaResponse());
+        if (recaptchaApiResponse.isSuccess()) {
+            try {
+                userService.sendPasswordResetEmail(forgotPasswordReq.getEmail(), UrlUtil.getBaseUrl(request));
+                log.debug("Initiated password reset email for {}", forgotPasswordReq.getEmail());
+                return new ForgotPasswordResponse(true, recaptchaApiResponse);
+            } catch (EmailDoesNotExistException ex) {
+                log.info("Cannot reset password for {} because this email was not found", forgotPasswordReq.getEmail());
+                return new ForgotPasswordResponse(false, recaptchaApiResponse);
+            }
+
+        } else {
+            log.warn("Cannot reset password, the recaptcha was invalid!");
+            return new ForgotPasswordResponse(recaptchaApiResponse);
+        }
     }
 
     @PostMapping("password-reset")

@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ErrorDetails } from 'src/app/core/models/error-details';
 import { MESSAGE_KEYS } from '../../core/services/message-keys';
 import { MessageConsumerService } from '../../core/services/message-consumer.service';
+import { PasswordForgot } from '../../core/models/password-forgot';
 import { Router } from '@angular/router';
 import { UserService } from '../../core/services/user.service';
 
@@ -16,7 +17,8 @@ export class ForgotPasswordComponent implements OnInit {
 
   forgotPasswordForm: FormGroup;
   submitted = false;
-  error: ErrorDetails = null;
+  recaptchaResponse: string;
+  error: ErrorDetails = { serverError: false, message: '', recaptchaError: false};
 
   constructor(
     private fb: FormBuilder,
@@ -31,26 +33,42 @@ export class ForgotPasswordComponent implements OnInit {
     })
   }
 
-  onSubmit() {
-    if (this.forgotPasswordForm.valid) {
-      this.userService.forgotPassword(this.email)
-        .subscribe(result => {
-          this.messageService.postMessage(MESSAGE_KEYS.email, this.email);
-          this.router.navigateByUrl('/password-reset-email');
-        }, error => {
-          this.error = { serverError: true, message: 'No account exists for this email!'};
-        });
-    } else {
-      this.error = null;
-      this.forgotPasswordForm.updateValueAndValidity();
-    }
+  onRecaptchaReady(response: string) {
+    this.recaptchaResponse = response;
   }
 
-  isError(): boolean {
-    if (this.error && this.error.serverError) {
-      return true;
+  onSubmit() {
+    if (this.forgotPasswordForm.valid && this.recaptchaResponse) {
+      let passwordForgot: PasswordForgot = {
+        email: this.email,
+        recaptchaResponse: this.recaptchaResponse
+      };
+      this.userService.forgotPassword(passwordForgot)
+        .subscribe(result => {
+          if (result.recaptchaApiResponse.success && result.emailExists) {
+            this.messageService.postMessage(MESSAGE_KEYS.email, this.email);
+            this.router.navigateByUrl('/password-reset-email');
+          } else if (result.recaptchaApiResponse.success) {
+            this.error.recaptchaError = false;
+            this.error.serverError = true;
+            this.error.message = "No account found";  
+          } else {
+            this.error.recaptchaError = true;
+            this.error.serverError = true;
+            this.error.message = "Recaptcha verification failed";            
+          }
+        }, error => {
+          this.error.recaptchaError = false;
+          this.error.serverError = true;
+          this.error.message = "The request could not be completed due to a server error";    
+        });
+    } else if (this.forgotPasswordForm.valid) {
+      this.error.recaptchaError = true;
+      this.error.serverError = false;
+      this.error.message = '';
     } else {
-      return false;
+      this.forgotPasswordForm.updateValueAndValidity();
+      this.error.recaptchaError = !this.recaptchaResponse;
     }
   }
 
