@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bitbus.indexcards.error.ErrorCodeException;
+import com.bitbus.indexcards.user.pw.ForgotPasswordRequest;
+import com.bitbus.indexcards.user.pw.ForgotPasswordResponse;
 import com.bitbus.indexcards.user.pw.InvalidPasswordResetException;
 import com.bitbus.indexcards.user.pw.PasswordResetDto;
 import com.bitbus.indexcards.user.recaptcha.RecaptchaApiResponse;
@@ -81,10 +83,26 @@ public class UserController {
 
     @PutMapping("password-forgot")
     @ResponseStatus(value = HttpStatus.ACCEPTED)
-    void handleForgotPassword(@RequestBody String email, HttpServletRequest request) throws ErrorCodeException {
-        log.debug("Handling forgot password for email {}", email);
-        userService.sendPasswordResetEmail(email, UrlUtil.getBaseUrl(request));
-        log.debug("Initiated password reset email for {}", email);
+    ForgotPasswordResponse handleForgotPassword(@RequestBody ForgotPasswordRequest forgotPasswordReq,
+            HttpServletRequest request) throws ErrorCodeException {
+        log.debug("Handling forgot password for email {}", forgotPasswordReq.getEmail());
+        log.debug("Validating forgot password recaptcha.");
+        RecaptchaApiResponse recaptchaApiResponse =
+                recaptchaService.getRecaptchaApiResponse(forgotPasswordReq.getRecaptchaResponse());
+        if (recaptchaApiResponse.isSuccess()) {
+            try {
+                userService.sendPasswordResetEmail(forgotPasswordReq.getEmail(), UrlUtil.getBaseUrl(request));
+                log.debug("Initiated password reset email for {}", forgotPasswordReq.getEmail());
+                return new ForgotPasswordResponse(true, recaptchaApiResponse);
+            } catch (EmailDoesNotExistException ex) {
+                log.info("Cannot reset password for {} because this email was not found", forgotPasswordReq.getEmail());
+                return new ForgotPasswordResponse(false, recaptchaApiResponse);
+            }
+
+        } else {
+            log.warn("Cannot reset password, the recaptcha was invalid!");
+            return new ForgotPasswordResponse(recaptchaApiResponse);
+        }
     }
 
     @PostMapping("password-reset")

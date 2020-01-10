@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { PasswordForgot } from '../models/password-forgot';
 import { PasswordReset } from '../models/password-reset';
 import { Principal } from '../models/principal';
 import { REST_PATHS } from 'src/app/rest-paths';
@@ -39,8 +40,8 @@ export class UserService {
         return this.http.delete<any>(REST_PATHS.sessions);
     }
 
-    forgotPassword(email: string): Observable<any> {
-        return this.http.put<any>(`${REST_PATHS.users}/password-forgot`, email);
+    forgotPassword(passwordForgot: PasswordForgot): Observable<any> {
+        return this.http.put<any>(`${REST_PATHS.users}/password-forgot`, passwordForgot);
     }
 
     // POST because not idempotent
